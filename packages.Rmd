@@ -1,6 +1,7 @@
 ---
 title: "Packages"
 output: distill::distill_article
+description: "Confirmed members of the targetopia and future directions"
 ---
 
 ```{r setup, include=FALSE}

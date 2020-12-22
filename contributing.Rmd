@@ -1,21 +1,55 @@
 ---
 title: "Contributing"
 output: distill::distill_article
+description: "How to create a targetopia package"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-This guide offers advice for creating a new targetopia package. It assumes prior knowledge of [`targets`]() [R package development](https://r-pkgs.org/), including [documentation](https://r-pkgs.org/man.html) and [testing](https://r-pkgs.org/tests.html). 
+The targetopia aims to cover many fields of Statistics and data science, and community contributions help enormously. The following best practices assist R developers in creating their own targetopia packages.
 
-## Scope
+## Before you begin
+
+### Prerequisites
+
+1. Domain knowledge: Bayesian statistics, deep neural networks, or whatever methodology the package will develop workflows for.
+1. Expertise with [`targets`](https://wlandau.github.io/targets). The [documentation website](https://wlandau.github.io/targets) links to helpful resources, including the [user manual](https://wlandau.github.io/targets-manual), [example projects](https://wlandau.github.io/targets/#examples), and [recorded talks](https://wlandau.github.io/targets/#recorded-talks). And direct experience with [`targets`](https://wlandau.github.io/targets) in a real-world project goes a long way.
+1. [R package development](https://r-pkgs.org/), including [documentation](https://r-pkgs.org/man.html) and [testing](https://r-pkgs.org/tests.html).
+
+### Scope
+
+In the backend, each targetopia package should dedicate itself to an existing implementation of an underlying methodology. For example, [`stantargets`](https://wlandau.github.io/stantargets) caters to [`cmdstanr`](https://mc-stan.org/cmdstanr/), and [`jagstargets`]() is caters to [`R2jags`](https://github.com/suyusung/R2jags). Do not be afraid to overfit to the methodology package.^[But please only use exported functions (`::`, not `:::`).] For example, [`stantargets`](https://wlandau.github.io/stantargets) chooses an interface that works extremely well with [`cmdstanr`](https://mc-stan.org/cmdstanr/) but poorly with [`brms`](https://paul-buerkner.github.io/brms/), and that is totally appropriate. As [discussed here](https://github.com/wlandau/stantargets/issues/12), the targetopia needs a completely different package to accommodate [`brms`](https://paul-buerkner.github.io/brms/) workflows.
+
+## Implementation
+
+### Target factories
 
 the main thing you need is a [target factory](https://wlandau.github.io/posts/2020-12-14-targetopia/) that calls  [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html). Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) can help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html).
 
-## Target factories
+### Settings
 
-## Automated testing
+### High-performance computing
+
+### Branching
+
+## Examples
+
+### Runtime
+
+### Cleanup
+
+## Testing
+
+### Manifest
+
+### Network
+
+### Results
+
+### Cleanup
+
 
 
 I do plan to write a more lengthy guide to contributing such packages, but for now, Functions [`tar_manifest()`](https://wlandau.github.io/targets/reference/tar_manifest.html), [`tar_network()`](https://wlandau.github.io/targets/reference/tar_network.html), [`tar_dir()`](https://wlandau.github.io/targets/reference/tar_dir.html), and [`tar_test()`](https://wlandau.github.io/targets/reference/tar_test.html) help write [examples](https://r-pkgs.org/man.html?q=examples#man-workflow) and [tests](https://testthat.r-lib.org/).
@@ -23,7 +57,11 @@ I do plan to write a more lengthy guide to contributing such packages, but for n
 
 ## Examples
 
-Feel free to borrow the source code of [`tarchetypes`](https://github.com/wlandau/tarchetypes) and [`stantargets`](https://github.com/wlandau/stantargets), and please do not hesitate to reach out.
+Feel free to borrow the source code of [`stantargets`](https://github.com/wlandau/stantargets) and [`tarchetypes`](https://github.com/wlandau/tarchetypes).
+
+## Contact
+
+please do not hesitate to reach out.
 
 <ul>
 <li>`r fontawesome::fa("github")` [`@wlandau`](https://github.com/wlandau)</li>

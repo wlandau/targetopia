@@ -88,24 +88,27 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_meta_tags-->
   <title>Targetopia: Contributing</title>
   
+  <meta property="description" itemprop="description" content="How to create a targetopia package"/>
   
   
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Targetopia: Contributing"/>
   <meta property="og:type" content="article"/>
+  <meta property="og:description" content="How to create a targetopia package"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Targetopia"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="Targetopia: Contributing"/>
+  <meta property="twitter:description" content="How to create a targetopia package"/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","output"]}},"value":[{"type":"character","attributes":{},"value":["Contributing"]},{"type":"character","attributes":{},"value":["distill::distill_article"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","output","description"]}},"value":[{"type":"character","attributes":{},"value":["Contributing"]},{"type":"character","attributes":{},"value":["distill::distill_article"]},{"type":"character","attributes":{},"value":["How to create a targetopia package"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2010,7 +2013,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Contributing","authors":[]}
+{"title":"Contributing","description":"How to create a targetopia package","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2024,7 +2027,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <a href="index.html">Targetopia</a>
 <a href="packages.html">Packages</a>
 <a href="contributing.html">Contributing</a>
-<a href="updates.html">Updates</a>
 <a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
 </div>
 </nav>
@@ -2037,19 +2039,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h1>Contributing</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-
+<p>How to create a targetopia package</p>
 </div>
 
 
 <div class="d-article">
-<p>This guide offers advice for creating a new targetopia package. It assumes prior knowledge of <a href="https://r-pkgs.org/">R package development</a>, including <a href="https://r-pkgs.org/man.html">documentation</a> and <a href="https://r-pkgs.org/tests.html">testing</a>.</p>
-<h2 id="scope">Scope</h2>
+<p>The targetopia aims to cover many fields of Statistics and data science, and community contributions help enormously. The following best practices assist R developers in creating their own targetopia packages.</p>
+<h2 id="before-you-begin">Before you begin</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ol type="1">
+<li>Domain knowledge: Bayesian statistics, deep neural networks, or whatever methodology the package will develop workflows for.</li>
+<li>Expertise with <a href="https://wlandau.github.io/targets"><code>targets</code></a>. The <a href="https://wlandau.github.io/targets">documentation website</a> links to helpful resources, including the <a href="https://wlandau.github.io/targets-manual">user manual</a>, <a href="https://wlandau.github.io/targets/#examples">example projects</a>, and <a href="https://wlandau.github.io/targets/#recorded-talks">recorded talks</a>. And direct experience with <a href="https://wlandau.github.io/targets"><code>targets</code></a> in a real-world project goes a long way.</li>
+<li><a href="https://r-pkgs.org/">R package development</a>, including <a href="https://r-pkgs.org/man.html">documentation</a> and <a href="https://r-pkgs.org/tests.html">testing</a>.</li>
+</ol>
+<h3 id="scope">Scope</h3>
+<p>In the backend, each targetopia package should dedicate itself to an existing implementation of an underlying methodology. For example, <a href="https://wlandau.github.io/stantargets"><code>stantargets</code></a> caters to <a href="https://mc-stan.org/cmdstanr/"><code>cmdstanr</code></a>, and <a href=""><code>jagstargets</code></a> is caters to <a href="https://github.com/suyusung/R2jags"><code>R2jags</code></a>. Do not be afraid to overfit to the methodology package.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> For example, <a href="https://wlandau.github.io/stantargets"><code>stantargets</code></a> chooses an interface that works extremely well with <a href="https://mc-stan.org/cmdstanr/"><code>cmdstanr</code></a> but poorly with <a href="https://paul-buerkner.github.io/brms/"><code>brms</code></a>, and that is totally appropriate. As <a href="https://github.com/wlandau/stantargets/issues/12">discussed here</a>, the targetopia needs a completely different package to accommodate <a href="https://paul-buerkner.github.io/brms/"><code>brms</code></a> workflows.</p>
+<h2 id="implementation">Implementation</h2>
+<h3 id="target-factories">Target factories</h3>
 <p>the main thing you need is a <a href="https://wlandau.github.io/posts/2020-12-14-targetopia/">target factory</a> that calls <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>. Functions <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_eval.html"><code>tar_eval()</code></a> can help create <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">language objects</a> for the <code>command</code> argument of <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>.</p>
-<h2 id="target-factories">Target factories</h2>
-<h2 id="automated-testing">Automated testing</h2>
-<p>I do plan to write a more lengthy guide to contributing such packages, but for now, Functions <a href="https://wlandau.github.io/targets/reference/tar_manifest.html"><code>tar_manifest()</code></a>, <a href="https://wlandau.github.io/targets/reference/tar_network.html"><code>tar_network()</code></a>, <a href="https://wlandau.github.io/targets/reference/tar_dir.html"><code>tar_dir()</code></a>, and <a href="https://wlandau.github.io/targets/reference/tar_test.html"><code>tar_test()</code></a> help write <a href="https://r-pkgs.org/man.html?q=examples#man-workflow">examples</a> and <a href="https://testthat.r-lib.org/">tests</a>.</p>
+<h3 id="settings">Settings</h3>
+<h3 id="branching">Branching</h3>
 <h2 id="examples">Examples</h2>
-<p>Feel free to borrow the source code of <a href="https://github.com/wlandau/tarchetypes"><code>tarchetypes</code></a> and <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a>, and please do not hesitate to reach out.</p>
+<h3 id="runtime">Runtime</h3>
+<h3 id="cleanup">Cleanup</h3>
+<h2 id="testing">Testing</h2>
+<h3 id="manifest">Manifest</h3>
+<h3 id="network">Network</h3>
+<h3 id="results">Results</h3>
+<h3 id="cleanup-1">Cleanup</h3>
+<p>I do plan to write a more lengthy guide to contributing such packages, but for now, Functions <a href="https://wlandau.github.io/targets/reference/tar_manifest.html"><code>tar_manifest()</code></a>, <a href="https://wlandau.github.io/targets/reference/tar_network.html"><code>tar_network()</code></a>, <a href="https://wlandau.github.io/targets/reference/tar_dir.html"><code>tar_dir()</code></a>, and <a href="https://wlandau.github.io/targets/reference/tar_test.html"><code>tar_test()</code></a> help write <a href="https://r-pkgs.org/man.html?q=examples#man-workflow">examples</a> and <a href="https://testthat.r-lib.org/">tests</a>.</p>
+<h2 id="examples-1">Examples</h2>
+<p>Feel free to borrow the source code of <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> and <a href="https://github.com/wlandau/tarchetypes"><code>tarchetypes</code></a>.</p>
+<h2 id="contact">Contact</h2>
+<p>please do not hesitate to reach out.</p>
 <ul>
 <li>
 <svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 496 512">
@@ -2071,6 +2093,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>But please only use exported functions (<code>::</code>, not <code>:::</code>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
