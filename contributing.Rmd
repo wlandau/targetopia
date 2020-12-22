@@ -34,13 +34,13 @@ Target factories are the heart of every targetopia package. A target factory is 
 #' @param data Character, data file path.
 target_factory <- function(data) {
   list(
-    tar_target_raw("file", data, format = "file"),
-    tar_target_raw("simple_model", quote(run_simple(file)))
+    tar_target_raw("file", data, format = "file", deployment = "main"),
+    tar_target_raw("simple_model", quote(run_simple(file)), format = "fst_tbl")
   )
 }
 ```
 
-In `_targets.R`, the user writes one call to the factory instead of multiple calls to `tar_target()`. This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like `format = "file"`.
+In `_targets.R`, the user writes one call to the factory instead of multiple calls to `tar_target()`. This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like `format = "file"` and `deployment = "main"`.
 
 ```{r}
 # _targets.R
@@ -72,8 +72,8 @@ target_factory <- function(name, data) {
   sym_file <- as.symbol(name_file)
   command <- substitute(run_simple(file), env = list(file = sym_file))
   list(
-    tar_target_raw(name_file, data, format = "file"),
-    tar_target_raw(name_text, command)
+    tar_target_raw(name_file, data, format = "file", deployment = "main"),
+    tar_target_raw(name_text, command, format = "fst_tbl")
   )
 }
 ```
@@ -90,7 +90,11 @@ tar_manifest(fields = command)
 
 ### Settings
 
-### High-performance computing
+Target factories should automatically supply optimal arguments to [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) wherever possible. The above `target_factory()` demonstrates three such examples:
+
+* `format = "file"`: as developers, we know we need a target to track changes to the the input data file.
+
+
 
 ### Branching
 
