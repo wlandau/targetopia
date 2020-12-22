@@ -2056,8 +2056,77 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>In the backend, each targetopia package should dedicate itself to an existing implementation of an underlying methodology. For example, <a href="https://wlandau.github.io/stantargets"><code>stantargets</code></a> caters to <a href="https://mc-stan.org/cmdstanr/"><code>cmdstanr</code></a>, and <a href=""><code>jagstargets</code></a> is caters to <a href="https://github.com/suyusung/R2jags"><code>R2jags</code></a>. Do not be afraid to overfit to the methodology package.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> For example, <a href="https://wlandau.github.io/stantargets"><code>stantargets</code></a> chooses an interface that works extremely well with <a href="https://mc-stan.org/cmdstanr/"><code>cmdstanr</code></a> but poorly with <a href="https://paul-buerkner.github.io/brms/"><code>brms</code></a>, and that is totally appropriate. As <a href="https://github.com/wlandau/stantargets/issues/12">discussed here</a>, the targetopia needs a completely different package to accommodate <a href="https://paul-buerkner.github.io/brms/"><code>brms</code></a> workflows.</p>
 <h2 id="implementation">Implementation</h2>
 <h3 id="target-factories">Target factories</h3>
-<p>the main thing you need is a <a href="https://wlandau.github.io/posts/2020-12-14-targetopia/">target factory</a> that calls <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>. Functions <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_eval.html"><code>tar_eval()</code></a> can help create <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">language objects</a> for the <code>command</code> argument of <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>.</p>
+<p>Target factories are the heart of every targetopia package. A target factory is a function that calls <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> to produces a list of targets. Users supply minimal easy-to-understand inputs, and the factory constructs a sophisticated pipeline tailored to the scenario at hand.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='co'># R/factory.R</span>
+<span class='co'>#' @export</span>
+<span class='co'>#' @param data Character, data file path.</span>
+<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"file"</span>, <span class='va'>data</span>, format <span class='op'>=</span> <span class='st'>"file"</span><span class='op'>)</span>,
+    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"simple_model"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>run_simple</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>}</span>
+</code></pre>
+</div>
+</div>
+<p>In <code>_targets.R</code>, the user writes one call to the factory instead of multiple calls to <code>tar_target()</code>. This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like <code>format = "file"</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='co'># _targets.R</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://wlandau.github.io/targets/'>targets</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>yourExamplePackage</span><span class='op'>)</span>
+<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_pipeline.html'>tar_pipeline</a></span><span class='op'>(</span><span class='fu'>target_factory</span><span class='op'>(</span><span class='st'>"dataset.csv"</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='co'># R console</span>
+<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
+<span class='co'>#&gt; # A tibble: 2 x 2</span>
+<span class='co'>#&gt;   name         command</span>
+<span class='co'>#&gt;   &lt;chr&gt;        &lt;chr&gt;</span>
+<span class='co'>#&gt; 1 simple_model "run_simple(file)"</span>
+<span class='co'>#&gt; 2 file         "\"dataset.csv\""</span>
+</code></pre>
+</div>
+</div>
+<p>Sometimes, these factories require metaprogramming. Functions <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_eval.html"><code>tar_eval()</code></a> can help create <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">language objects</a> for the <code>command</code> argument of <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>. This is useful, for example, if you want to users to a base name for the targets.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='co'># R/factory.R</span>
+<span class='co'>#' @export</span>
+<span class='co'>#' @param name Symbol, name for the collection of targets.</span>
+<span class='co'>#' @param data Character, data file path.</span>
+<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>data</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>name_text</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>name</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='va'>name_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_text</span>, <span class='st'>"_file"</span><span class='op'>)</span>
+  <span class='va'>sym_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_file</span><span class='op'>)</span>
+  <span class='va'>command</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_simple</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>data</span>, format <span class='op'>=</span> <span class='st'>"file"</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_text</span>, <span class='va'>command</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>}</span>
+</code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre><code><span class='co'># R console</span>
+<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
+<span class='co'>#&gt; # A tibble: 2 x 2</span>
+<span class='co'>#&gt;   name        command                  </span>
+<span class='co'>#&gt;   &lt;chr&gt;       &lt;chr&gt;                    </span>
+<span class='co'>#&gt; 1 custom      "run_simple(custom_file)"</span>
+<span class='co'>#&gt; 2 custom_file "\"dataset.csv\"" </span>
+</code></pre>
+</div>
+</div>
 <h3 id="settings">Settings</h3>
+<h3 id="high-performance-computing">High-performance computing</h3>
 <h3 id="branching">Branching</h3>
 <h2 id="examples">Examples</h2>
 <h3 id="runtime">Runtime</h3>

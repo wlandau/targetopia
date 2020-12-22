@@ -4,8 +4,8 @@ output: distill::distill_article
 description: "How to create a targetopia package"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE, echo = TRUE)
 ```
 
 The targetopia aims to cover many fields of Statistics and data science, and community contributions help enormously. The following best practices assist R developers in creating their own targetopia packages.
@@ -26,7 +26,67 @@ In the backend, each targetopia package should dedicate itself to an existing im
 
 ### Target factories
 
-the main thing you need is a [target factory](https://wlandau.github.io/posts/2020-12-14-targetopia/) that calls  [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html). Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) can help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html).
+Target factories are the heart of every targetopia package. A target factory is a function that calls [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) to produces a list of targets. Users supply minimal easy-to-understand inputs, and the factory constructs a sophisticated pipeline tailored to the scenario at hand.
+
+```{r}
+# R/factory.R
+#' @export
+#' @param data Character, data file path.
+target_factory <- function(data) {
+  list(
+    tar_target_raw("file", data, format = "file"),
+    tar_target_raw("simple_model", quote(run_simple(file)))
+  )
+}
+```
+
+In `_targets.R`, the user writes one call to the factory instead of multiple calls to `tar_target()`. This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like `format = "file"`.
+
+```{r}
+# _targets.R
+library(targets)
+library(yourExamplePackage)
+tar_pipeline(target_factory("dataset.csv"))
+```
+
+```{r}
+# R console
+tar_manifest(fields = command)
+#> # A tibble: 2 x 2
+#>   name         command
+#>   <chr>        <chr>
+#> 1 simple_model "run_simple(file)"
+#> 2 file         "\"dataset.csv\""
+```
+
+Sometimes, these factories require metaprogramming. Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) can help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html). This is useful, for example, if you want to users to a base name for the targets.
+
+```{r}
+# R/factory.R
+#' @export
+#' @param name Symbol, name for the collection of targets.
+#' @param data Character, data file path.
+target_factory <- function(name, data) {
+  name_text <- deparse(substitute(name))
+  name_file <- paste0(name_text, "_file")
+  sym_file <- as.symbol(name_file)
+  command <- substitute(run_simple(file), env = list(file = sym_file))
+  list(
+    tar_target_raw(name_file, data, format = "file"),
+    tar_target_raw(name_text, command)
+  )
+}
+```
+
+```{r}
+# R console
+tar_manifest(fields = command)
+#> # A tibble: 2 x 2
+#>   name        command                  
+#>   <chr>       <chr>                    
+#> 1 custom      "run_simple(custom_file)"
+#> 2 custom_file "\"dataset.csv\"" 
+```
 
 ### Settings
 
