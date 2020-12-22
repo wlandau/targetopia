@@ -2061,23 +2061,24 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre><code><span class='co'># R/factory.R</span>
 <span class='co'>#' @export</span>
-<span class='co'>#' @param data Character, data file path.</span>
-<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'>#' @param file Character, data file path.</span>
+<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"file"</span>, <span class='va'>data</span>, format <span class='op'>=</span> <span class='st'>"file"</span><span class='op'>)</span>,
-    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"simple_model"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>run_simple</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"file"</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
+    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"data"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
+    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"model"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span>
   <span class='op'>)</span>
 <span class='op'>}</span>
 </code></pre>
 </div>
 </div>
-<p>In <code>_targets.R</code>, the user writes one call to the factory instead of multiple calls to <code>tar_target()</code>. This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like <code>format = "file"</code>.</p>
+<p>In <code>_targets.R</code>, the user writes one call to the factory instead of multiple calls to <a href="https://wlandau.github.io/targets/reference/tar_target.html"><code>tar_target()</code></a>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like <code>format = "file"</code> and <code>deployment = "main"</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre><code><span class='co'># _targets.R</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://wlandau.github.io/targets/'>targets</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>yourExamplePackage</span><span class='op'>)</span>
-<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_pipeline.html'>tar_pipeline</a></span><span class='op'>(</span><span class='fu'>target_factory</span><span class='op'>(</span><span class='st'>"dataset.csv"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_pipeline.html'>tar_pipeline</a></span><span class='op'>(</span><span class='fu'>target_factory</span><span class='op'>(</span><span class='st'>"data.csv"</span><span class='op'>)</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2085,11 +2086,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre><code><span class='co'># R console</span>
 <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
-<span class='co'>#&gt; # A tibble: 2 x 2</span>
-<span class='co'>#&gt;   name         command</span>
-<span class='co'>#&gt;   &lt;chr&gt;        &lt;chr&gt;</span>
-<span class='co'>#&gt; 1 simple_model "run_simple(file)"</span>
-<span class='co'>#&gt; 2 file         "\"dataset.csv\""</span>
+<span class='co'>#&gt; # A tibble: 3 x 2</span>
+<span class='co'>#&gt;   name  command          </span>
+<span class='co'>#&gt;   &lt;chr&gt; &lt;chr&gt;            </span>
+<span class='co'>#&gt; 1 file  "\"data.csv\""   </span>
+<span class='co'>#&gt; 2 data  "read_data(file)"           </span>
+<span class='co'>#&gt; 3 model "run_model(data)"</span>
 </code></pre>
 </div>
 </div>
@@ -2099,15 +2101,19 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <pre><code><span class='co'># R/factory.R</span>
 <span class='co'>#' @export</span>
 <span class='co'>#' @param name Symbol, name for the collection of targets.</span>
-<span class='co'>#' @param data Character, data file path.</span>
-<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>data</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='va'>name_text</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>name</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='va'>name_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_text</span>, <span class='st'>"_file"</span><span class='op'>)</span>
+<span class='co'>#' @param file Character, data file path.</span>
+<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>file</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>name_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>name</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='va'>name_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='st'>"_file"</span><span class='op'>)</span>
+  <span class='va'>name_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='st'>"_data"</span><span class='op'>)</span>
   <span class='va'>sym_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_file</span><span class='op'>)</span>
-  <span class='va'>command</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_simple</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='va'>sym_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_data</span><span class='op'>)</span>
+  <span class='va'>command_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='va'>command_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sym_data</span><span class='op'>)</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>data</span>, format <span class='op'>=</span> <span class='st'>"file"</span><span class='op'>)</span>,
-    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_text</span>, <span class='va'>command</span><span class='op'>)</span>
+    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span>
   <span class='op'>)</span>
 <span class='op'>}</span>
 </code></pre>
@@ -2117,30 +2123,43 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="sourceCode">
 <pre><code><span class='co'># R console</span>
 <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
-<span class='co'>#&gt; # A tibble: 2 x 2</span>
+<span class='co'>#&gt; # A tibble: 3 x 2</span>
 <span class='co'>#&gt;   name        command                  </span>
 <span class='co'>#&gt;   &lt;chr&gt;       &lt;chr&gt;                    </span>
-<span class='co'>#&gt; 1 custom      "run_simple(custom_file)"</span>
-<span class='co'>#&gt; 2 custom_file "\"dataset.csv\"" </span>
+<span class='co'>#&gt; 1 custom_file "\"data.csv\""           </span>
+<span class='co'>#&gt; 2 custom_data "read_data(custom_file)"</span>
+<span class='co'>#&gt; 3 custom      "run_model(custom_data)"</span>
 </code></pre>
 </div>
 </div>
 <h3 id="settings">Settings</h3>
-<h3 id="high-performance-computing">High-performance computing</h3>
+<p>Target factories should automatically supply optimal arguments to <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> wherever possible. The above <code>target_factory()</code> demonstrates three such examples:</p>
+<ul>
+<li><code>deployment = "main"</code>: the data file lives locally, so remote workers in <a href="https://wlandau.github.io/targets-manual/hpc.html">high-performance computing</a> scenarios may not be able to access it. So we require the file and data targets to run locally and let the user decide whether to run the model on a remote node.</li>
+<li><code>format = "file"</code>: as developers, we know we need a target to track changes to the the input data file.</li>
+<li><code>format = "fst_tbl"</code>: if the data file contains a data frame, the <code>"fst_tbl"</code> is a fast compressed format to store and retrieve the data efficiently.</li>
+<li><code>format = "qs"</code>: for efficient storage and retrieval of non-data-frame objects, the <code>"qs"</code> format outperforms the default <code>"rds"</code> format.</li>
+</ul>
+<p>For user-defined settings, target factories should accept the same arguments as <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> and use <a href="https://wlandau.github.io/targets/reference/tar_option_get.html"><code>tar_option_get()</code></a> to supply defaults. This pattern was omitted here for brevity’s sake, but you can find examples in <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a>.</p>
 <h3 id="branching">Branching</h3>
+<p><a href="https://wlandau.github.io/targets-manual/dynamic.html">Dynamic branching</a> and <a href="https://wlandau.github.io/targets-manual/static.html">static branching</a>, are among the most difficult features to use properly. They are essential tools for powerful scalable pipelines, but most targetopia packages should abstract them away so users do not have to think about them.</p>
+<p><a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> uses <a href="https://wlandau.github.io/targets-manual/static.html">static branching</a> to iterate over Bayesian models for functions like <a href="https://wlandau.github.io/stantargets/reference/tar_stan_mcmc.html"><code>tar_stan_mcmc()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/"><code>tarchetypes</code></a> functions <a href="https://wlandau.github.io/tarchetypes/reference/tar_map.html"><code>tar_map()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_combine_raw.html"><code>tar_combine_raw()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_map.html"><code>tar_eval()</code></a> can help you do the same.</p>
+<p><a href="https://wlandau.github.io/targets-manual/dynamic.html">Dynamic branching</a> in target factories is more than just metaprogramming to create the <code>pattern</code> argument of <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>. Developers also need to think about <a href="https://wlandau.github.io/targets-manual/dynamic.html#batching">batching</a> to prevent users from accidentally creating thousands of targets, which would incur unnecessary overhead. Batching usually requires an auxiliary target for the batch index and a downstream target that dynamically maps over the batch index and performs iteration within each batch. Examples include <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> functions such as <a href="https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html"><code>tar_stan_mcmc_rep_summary()</code></a> and <a href="https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html"><code>tar_rep_raw()</code></a> from <a href="https://wlandau.github.io/tarchetypes/"><code>tarchetypes</code></a>.</p>
 <h2 id="examples">Examples</h2>
-<h3 id="runtime">Runtime</h3>
-<h3 id="cleanup">Cleanup</h3>
+<p>The <code>@examples</code> field of the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> docstring should run quickly and avoid creating persistent files, which is why <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> simply sketches <code>_targets.R</code> files to demonstrate how to use its target factories. If you want to actually run a pipeline in an example, consider executing it within a call to <a href="https://wlandau.github.io/targets/reference/tar_dir.html"><code>tar_dir()</code></a>, which runs code in a temporary directory.</p>
 <h2 id="testing">Testing</h2>
-<h3 id="manifest">Manifest</h3>
-<h3 id="network">Network</h3>
-<h3 id="results">Results</h3>
-<h3 id="cleanup-1">Cleanup</h3>
-<p>I do plan to write a more lengthy guide to contributing such packages, but for now, Functions <a href="https://wlandau.github.io/targets/reference/tar_manifest.html"><code>tar_manifest()</code></a>, <a href="https://wlandau.github.io/targets/reference/tar_network.html"><code>tar_network()</code></a>, <a href="https://wlandau.github.io/targets/reference/tar_dir.html"><code>tar_dir()</code></a>, and <a href="https://wlandau.github.io/targets/reference/tar_test.html"><code>tar_test()</code></a> help write <a href="https://r-pkgs.org/man.html?q=examples#man-workflow">examples</a> and <a href="https://testthat.r-lib.org/">tests</a>.</p>
-<h2 id="examples-1">Examples</h2>
-<p>Feel free to borrow the source code of <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> and <a href="https://github.com/wlandau/tarchetypes"><code>tarchetypes</code></a>.</p>
+<h3 id="what-to-test">What to test</h3>
+<ol type="1">
+<li>Results: write a pipeline with <a href="https://wlandau.github.io/targets/reference/tar_script.html"><code>tar_script()</code></a>, run it with <a href="https://wlandau.github.io/targets/reference/tar_make.html"><code>tar_make()</code></a>, and inspect the results with <a href="https://wlandau.github.io/targets/reference/tar_read.html"><code>tar_read()</code></a>.</li>
+<li>Manifest: use <a href="https://wlandau.github.io/targets/reference/tar_manifest.html"><code>tar_manifest()</code></a> to check that the pipeline has the correct number of dependencies and the correct properties.</li>
+<li>Dependencies: use <a href="https://wlandau.github.io/targets/reference/tar_network.html"><code>tar_network()</code></a> to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file to the data target.</li>
+</ol>
+<h3 id="speed">Speed</h3>
+<p><a href="https://testthat.r-lib.org/">Unit tests</a> should ideally run quickly. To increase testing speed, you may wish to set <code>callr_function = NULL</code> in functions like <a href="https://wlandau.github.io/targets/reference/tar_make.html"><code>tar_make()</code></a>, but be warned that the result will be sensitive to functions defined in the testing environment.</p>
+<h3 id="environment">Environment</h3>
+<p>Tests should avoid creating persistent files, and they should avoid permanently changing <a href="https://wlandau.github.io/targets/reference/tar_option_set.html">target-specific options</a>. <a href="https://wlandau.github.io/targets/reference/tar_test.html"><code>tar_test()</code></a> is a drop-in replacement for <a href="https://testthat.r-lib.org/reference/test_that.html"><code>test_that()</code></a> which solves these problems. It runs code in a temporary directory, and it automatically calls <a href="https://wlandau.github.io/targets/reference/tar_option_set.html"><code>tar_option_reset()</code></a> at the end, so your tests can freely create local files and set target options.</p>
 <h2 id="contact">Contact</h2>
-<p>please do not hesitate to reach out.</p>
+<p>If you have a package idea or are actively working on one, please do not hesitate to reach out.</p>
 <ul>
 <li>
 <svg style="height:0.8em;top:.04em;position:relative;" viewBox="0 0 496 512">
@@ -2166,6 +2185,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>But please only use exported functions (<code>::</code>, not <code>:::</code>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Users can still write their own downstream <a href="https://wlandau.github.io/targets/reference/tar_target.html"><code>tar_target()</code></a> calls in the pipeline, but they should not have to think too hard about it.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->
