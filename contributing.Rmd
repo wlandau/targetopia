@@ -132,10 +132,10 @@ The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring
 Feel free to include a README badge to let others know your package is part of the R Targetopia.
 
 ```md
-[![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-000062?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
+[![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
 ```
 
-[![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-000062?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
+[![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
 
 
 ## Testing
