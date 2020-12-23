@@ -8,25 +8,28 @@ description: "How to create a targetopia package"
 knitr::opts_chunk$set(eval = FALSE, echo = TRUE)
 ```
 
-The targetopia aims to cover many fields of Statistics and data science, and community contributions help enormously. The following best practices assist R developers in creating their own targetopia packages.
+
+The targetopia is trying to cover most popular fields of Statistics and data science that have cumbersome workflows and intense computation. This undertaking is enormous, and it requires a huge diversity of expertise and perspectives, so community contributions are extremely valuable. The following best practices make it easier to create your own targetopia package.
 
 ## Before you begin
 
 ### Prerequisites
 
-1. Domain knowledge: Bayesian statistics, deep neural networks, or whatever methodology the package will develop workflows for.
-1. Expertise with [`targets`](https://wlandau.github.io/targets). The [documentation website](https://wlandau.github.io/targets) links to helpful resources, including the [user manual](https://wlandau.github.io/targets-manual), [example projects](https://wlandau.github.io/targets/#examples), and [recorded talks](https://wlandau.github.io/targets/#recorded-talks). And direct experience with [`targets`](https://wlandau.github.io/targets) in a real-world project goes a long way.
-1. [R package development](https://r-pkgs.org/), including [documentation](https://r-pkgs.org/man.html) and [testing](https://r-pkgs.org/tests.html).
+1. Domain knowledge: Bayesian statistics, deep neural networks, or whatever field of data science the package is for.
+1. Expertise with [`targets`](https://wlandau.github.io/targets). The [documentation website](https://wlandau.github.io/targets) links to helpful resources, including the [user manual](https://wlandau.github.io/targets-manual), [example projects](https://wlandau.github.io/targets/#examples), and [recorded talks](https://wlandau.github.io/targets/#recorded-talks). Direct experience with [`targets`](https://wlandau.github.io/targets) in a real-world project goes a long way.
+1. [R package development](https://r-pkgs.org/), including [documentation](https://r-pkgs.org/man.html) and [testing](https://r-pkgs.org/tests.html). The [rOpenSci development guide](https://devguide.ropensci.org/) is super helpful.
 
 ### Scope
 
-In the backend, each targetopia package should dedicate itself to an existing implementation of an underlying methodology. For example, [`stantargets`](https://wlandau.github.io/stantargets) caters to [`cmdstanr`](https://mc-stan.org/cmdstanr/), and [`jagstargets`]() is caters to [`R2jags`](https://github.com/suyusung/R2jags). Do not be afraid to overfit to the methodology package.^[But please only use exported functions (`::`, not `:::`).] For example, [`stantargets`](https://wlandau.github.io/stantargets) chooses an interface that works extremely well with [`cmdstanr`](https://mc-stan.org/cmdstanr/) but poorly with [`brms`](https://paul-buerkner.github.io/brms/), and that is totally appropriate. As [discussed here](https://github.com/wlandau/stantargets/issues/12), the targetopia needs a completely different package to accommodate [`brms`](https://paul-buerkner.github.io/brms/) workflows.
+In the backend, each targetopia package should concentrate on one existing implementation of the given data science methodology. For example, [`stantargets`](https://wlandau.github.io/stantargets) focuses on [`cmdstanr`](https://mc-stan.org/cmdstanr/), and [`jagstargets`](https://wlandau.github.io/jagstargets) focuses on [`R2jags`](https://github.com/suyusung/R2jags). Do not be afraid to overfit to the methodology package.^[But please only use exported functions (`::`, not `:::`).] For example, [`stantargets`](https://wlandau.github.io/stantargets) chooses an interface that works extremely well with [`cmdstanr`](https://mc-stan.org/cmdstanr/) but poorly with [`brms`](https://paul-buerkner.github.io/brms/), and this tradeoff is completely appropriate. As [discussed here](https://github.com/wlandau/stantargets/issues/12), the targetopia needs a totally different package to accommodate [`brms`](https://paul-buerkner.github.io/brms/) workflows.
 
 ## Implementation
 
 ### Target factories
 
 Target factories are the heart of every targetopia package. A target factory is a function that calls [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) to produces a list of targets. Users supply minimal easy-to-understand inputs, and the factory constructs a sophisticated pipeline tailored to the scenario at hand.
+
+The following sketch of a factory produces targets that track a data file, read it into R, and fit a model. It assumes we already wrote custom functions `read_data()` and `run_model()` defined elsewhere in our package.
 
 ```{r}
 # R/factory.R
@@ -41,7 +44,7 @@ target_factory <- function(file) {
 }
 ```
 
-In `_targets.R`, the user writes one call to the factory instead of multiple calls to [`tar_target()`](https://wlandau.github.io/targets/reference/tar_target.html).^[Users can still write their own downstream [`tar_target()`](https://wlandau.github.io/targets/reference/tar_target.html) calls in the pipeline, but they should not have to think too hard about it.] This shorthand simplifies pipeline construction by reducing the volume of code required and abstracting away settings like `format = "file"` and `deployment = "main"`.
+In `_targets.R`, the user writes one call to the factory instead of multiple calls to [`tar_target()`](https://wlandau.github.io/targets/reference/tar_target.html).^[Users can still write their own downstream [`tar_target()`](https://wlandau.github.io/targets/reference/tar_target.html) calls in the pipeline, but they should not have to think too hard about it.] This shorthand makes user-side code easier and more concise, and it abstracts away low-level configuration settings like `format = "file"` and `deployment = "main"`.
 
 ```{r}
 # _targets.R
@@ -61,7 +64,7 @@ tar_manifest(fields = command)
 #> 3 model "run_model(data)"
 ```
 
-Sometimes, these factories require metaprogramming. Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) can help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html). This is useful, for example, if you want to users to a base name for the targets.
+Sometimes, these factories require metaprogramming: for example, to allow customized target names that appear in the commands. Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html).
 
 ```{r}
 # R/factory.R
@@ -97,47 +100,67 @@ tar_manifest(fields = command)
 
 ### Settings
 
-Target factories should automatically supply optimal arguments to [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) wherever possible. The above `target_factory()` demonstrates three such examples:
+Target factories should automatically supply optimal arguments to [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) so the user does not need to think about them. We have four such examples in `target_factory()` above.
 
-* `deployment = "main"`: the data file lives locally, so remote workers in [high-performance computing](https://wlandau.github.io/targets-manual/hpc.html) scenarios may not be able to access it. So we require the file and data targets to run locally and let the user decide whether to run the model on a remote node.
-* `format = "file"`: as developers, we know we need a target to track changes to the the input data file.
-* `format = "fst_tbl"`: if the data file contains a data frame, the `"fst_tbl"` is a fast compressed format to store and retrieve the data efficiently.
-* `format = "qs"`: for efficient storage and retrieval of non-data-frame objects, the `"qs"` format outperforms the default `"rds"` format.
+1. `deployment = "main"`: the data file lives on the user's local machine or login node, so remote workers in [high-performance computing](https://wlandau.github.io/targets-manual/hpc.html) scenarios may not be able to access it. Those targets should run on the same computer as that file.
+1. `format = "file"`: track the input data file and invalidate the appropriate targets when the contents of the file change.
+1. `format = "fst_tbl"`: if the data file contains a data frame, the `"fst_tbl"` is a fast compressed format to store and retrieve the data efficiently.
+1. `format = "qs"`: for efficient storage and retrieval of non-data-frame objects.
 
-For user-defined settings, target factories should accept the same arguments as [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) and use [`tar_option_get()`](https://wlandau.github.io/targets/reference/tar_option_get.html) to supply defaults. This pattern was omitted here for brevity's sake, but you can find examples in [`stantargets`](https://github.com/wlandau/stantargets).
+For the sake of brevity, our `target_factory()` function has few arguments. However, most real-world factories should have arguments for target-level settings that users have good reasons to modify. Examples may include `priority` and `cue` but never `command` or `pattern`. If there is no domain knowledge to help determined the default values, then the defaults should come from [`tar_option_get()`](https://wlandau.github.io/targets/reference/tar_option_get.html).
 
 ### Branching
 
-[Dynamic branching](https://wlandau.github.io/targets-manual/dynamic.html) and [static branching](https://wlandau.github.io/targets-manual/static.html), are among the most difficult features to use properly. They are essential tools for powerful scalable pipelines, but most targetopia packages should abstract them away so users do not have to think about them.
+If your package uses any kind of branching, whether [dynamic](https://wlandau.github.io/targets-manual/dynamic.html) or [static](https://wlandau.github.io/targets-manual/static.html), it should be completely hidden from the user. Branching is extremely difficult for most people to use properly, and it is can be frustrating and risky if there are low-level details to micromanage. Simplification and childproofing are absolutely critical.
 
+#### Static branching
 
-[`stantargets`](https://github.com/wlandau/stantargets) uses [static branching](https://wlandau.github.io/targets-manual/static.html) to iterate over Bayesian models for functions like [`tar_stan_mcmc()`](https://wlandau.github.io/stantargets/reference/tar_stan_mcmc.html), and [`tarchetypes`](https://wlandau.github.io/tarchetypes/) functions [`tar_map()`](https://wlandau.github.io/tarchetypes/reference/tar_map.html), [`tar_combine_raw()`](https://wlandau.github.io/tarchetypes/reference/tar_combine_raw.html), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_map.html) can help you do the same.
+[Static branching](https://wlandau.github.io/targets-manual/static.html) is for replication over a small number of heterogeneous tasks. Functions [`tar_map()`](https://wlandau.github.io/tarchetypes/reference/tar_map.html), [`tar_combine_raw()`](https://wlandau.github.io/tarchetypes/reference/tar_combine_raw.html), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_map.html) can help with the implementation internally. User-side inputs should be as simple as possible. For example, [`stantargets::tar_stan_mcmc()`](https://wlandau.github.io/stantargets/reference/tar_stan_mcmc.html) accepts a character vector of Stan model files and uses [`tar_map()`](https://wlandau.github.io/tarchetypes/reference/tar_map.html) to create an entire group of targets for each model.
 
-[Dynamic branching](https://wlandau.github.io/targets-manual/dynamic.html) in target factories is more than just metaprogramming to create the `pattern` argument of  [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html). Developers also need to think about [batching](https://wlandau.github.io/targets-manual/dynamic.html#batching) to prevent users from accidentally creating thousands of targets, which would incur unnecessary overhead. Batching usually requires an auxiliary target for the batch index and a downstream target that dynamically maps over the batch index and performs iteration within each batch. Examples include [`stantargets`](https://github.com/wlandau/stantargets) functions such as [`tar_stan_mcmc_rep_summary()`](https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html) and [`tar_rep_raw()`](https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html) from [`tarchetypes`](https://wlandau.github.io/tarchetypes/).
+#### Dynamic branching
 
-## Examples
+[Dynamic branching](https://wlandau.github.io/targets-manual/dynamic.html) is best suited for a large number of homogeneous tasks where the inputs are not always known in advance. If your package requires dynamic branching, it should automatically create the `pattern` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) with metaprogramming. It should also have a [batching](https://wlandau.github.io/targets-manual/dynamic.html#batching) scheme to reduce the number of targets and keep overhead to a minimum. You can either use [`tar_rep_raw()`](https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html) or implement it manually using a batch index target and iteration within batches. Examples include [`tar_stan_mcmc_rep_summary()`](https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html) and the [`targets-stan`](https://github.com/wlandau/targets-stan/) workflow.
+
+## Documentation
+
+### Examples
 
 The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring should run quickly and avoid creating persistent files, which is why  [`stantargets`](https://github.com/wlandau/stantargets) simply sketches `_targets.R` files to demonstrate how to use its target factories. If you want to actually run a pipeline in an example, consider executing it within a call to [`tar_dir()`](https://wlandau.github.io/targets/reference/tar_dir.html), which runs code in a temporary directory.
+
+### README.Rmd
+
+Feel free to include a README badge to let others know your package is part of the targetopia.
+
+```md
+[![targetopia](https://img.shields.io/badge/targetopia-member-000062?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
+```
+
+[![targetopia](https://img.shields.io/badge/targetopia-member-000062?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia.html)
+
 
 ## Testing
 
 ### What to test
 
-1. Results: write a pipeline with [`tar_script()`](https://wlandau.github.io/targets/reference/tar_script.html), run it with [`tar_make()`](https://wlandau.github.io/targets/reference/tar_make.html), and inspect the results with [`tar_read()`](https://wlandau.github.io/targets/reference/tar_read.html).
-2. Manifest: use [`tar_manifest()`](https://wlandau.github.io/targets/reference/tar_manifest.html) to check that the pipeline has the correct number of dependencies and the correct properties.
-3. Dependencies: use [`tar_network()`](https://wlandau.github.io/targets/reference/tar_network.html) to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file to the data target.
+1. Results: write a pipeline with [`tar_script()`](https://wlandau.github.io/targets/reference/tar_script.html), run it with [`tar_make()`](https://wlandau.github.io/targets/reference/tar_make.html), and inspect the output with [`tar_read()`](https://wlandau.github.io/targets/reference/tar_read.html).
+2. Manifest: use [`tar_manifest()`](https://wlandau.github.io/targets/reference/tar_manifest.html) to check that the pipeline has the correct number of targets with the correct configuration settings.
+3. Dependencies: use the graph edges from  [`tar_network()`](https://wlandau.github.io/targets/reference/tar_network.html) to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file to the data target.
 
 ### Speed
 
-[Unit tests](https://testthat.r-lib.org/) should ideally run quickly. To increase testing speed, you may wish to set `callr_function = NULL` in functions like [`tar_make()`](https://wlandau.github.io/targets/reference/tar_make.html), but be warned that the result will be sensitive to functions defined in the testing environment. 
+[Unit tests](https://testthat.r-lib.org/) should run quickly where possible. To increase testing speed, you may wish to set `callr_function = NULL` in functions like [`tar_make()`](https://wlandau.github.io/targets/reference/tar_make.html), but be warned that the result will be sensitive to functions you define in the testing environment. 
 
 ### Environment
 
-Tests should avoid creating persistent files, and they should avoid permanently changing [target-specific options](https://wlandau.github.io/targets/reference/tar_option_set.html). [`tar_test()`](https://wlandau.github.io/targets/reference/tar_test.html) is a drop-in replacement for [`test_that()`](https://testthat.r-lib.org/reference/test_that.html) which solves these problems. It runs code in a temporary directory, and it automatically calls [`tar_option_reset()`](https://wlandau.github.io/targets/reference/tar_option_set.html) at the end, so your tests can freely create local files and set target options.
+Tests should avoid creating persistent files, and they should avoid permanently changing [target-specific options](https://wlandau.github.io/targets/reference/tar_option_set.html). [`tar_test()`](https://wlandau.github.io/targets/reference/tar_test.html) is a drop-in replacement for [`test_that()`](https://testthat.r-lib.org/reference/test_that.html) which solves these problems. It runs code in a temporary directory, and it automatically calls [`tar_option_reset()`](https://wlandau.github.io/targets/reference/tar_option_set.html) when the test is over. Tests using [`tar_test()`](https://wlandau.github.io/targets/reference/tar_test.html) can freely create local files and set target options.
+
+## rOpenSci
+
+When your package is ready, please consider submitting it to [rOpenSci](https://ropensci.org/) for peer review under the [workflow automation category](https://devguide.ropensci.org/policies.html#package-categories). The review process is an excellent source of feedback, and the [rOpenSci](https://ropensci.org/) community is an excellent source of support. More details are [available here](https://devguide.ropensci.org/softwarereviewintro.html).
 
 ## Contact
 
-If you have a package idea or are actively working on one, please do not hesitate to reach out.
+If you have a package idea or are actively working on one, please feel free to reach out.
 
 <ul>
 <li>`r fontawesome::fa("github")` [`@wlandau`](https://github.com/wlandau)</li>
