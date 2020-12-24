@@ -111,7 +111,7 @@ For the sake of brevity, our `target_factory()` function has few arguments. Howe
 
 ### Branching
 
-If your package uses any kind of branching, whether [dynamic](https://wlandau.github.io/targets-manual/dynamic.html) or [static](https://wlandau.github.io/targets-manual/static.html), it should be completely hidden from the user. Branching is extremely difficult for most people to use properly, and it is can be frustrating and risky if there are low-level details to micromanage. Simplification and childproofing are absolutely critical.
+If your package uses any kind of branching, whether [dynamic](https://wlandau.github.io/targets-manual/dynamic.html) or [static](https://wlandau.github.io/targets-manual/static.html), it should be completely hidden from the user. Branching is extremely difficult for most people to use properly, and it is can be frustrating and risky if there are low-level details to micromanage. Simplification and guardrails are absolutely critical.
 
 #### Static branching
 
