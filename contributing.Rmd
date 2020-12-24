@@ -1,7 +1,7 @@
 ---
 title: "Contributing"
 output: distill::distill_article
-description: "How to create a targetopia package"
+description: "How to create an R Targetopia package"
 ---
 
 ```{r, include = FALSE}
@@ -9,7 +9,7 @@ knitr::opts_chunk$set(eval = FALSE, echo = TRUE)
 ```
 
 
-The targetopia is trying to cover most popular fields of Statistics and data science that have cumbersome workflows and intense computation. This undertaking is enormous, and it requires a huge diversity of expertise and perspectives, so community contributions are extremely valuable. The following best practices make it easier to create your own targetopia package.
+The R Targetopia is trying to cover most popular fields of Statistics and data science that have cumbersome workflows and intense computation. This undertaking is enormous, and it requires a huge diversity of expertise and perspectives, so community contributions are extremely valuable. The following best practices make it easier to create your own R Targetopia package.
 
 ## Before you begin
 
@@ -21,13 +21,13 @@ The targetopia is trying to cover most popular fields of Statistics and data sci
 
 ### Scope
 
-In the backend, each targetopia package should concentrate on one existing implementation of the given data science methodology. For example, [`stantargets`](https://wlandau.github.io/stantargets) focuses on [`cmdstanr`](https://mc-stan.org/cmdstanr/), and [`jagstargets`](https://wlandau.github.io/jagstargets) focuses on [`R2jags`](https://github.com/suyusung/R2jags). Do not be afraid to overfit to the methodology package.^[But please only use exported functions (`::`, not `:::`).] For example, [`stantargets`](https://wlandau.github.io/stantargets) chooses an interface that works extremely well with [`cmdstanr`](https://mc-stan.org/cmdstanr/) but poorly with [`brms`](https://paul-buerkner.github.io/brms/), and this tradeoff is completely appropriate. As [discussed here](https://github.com/wlandau/stantargets/issues/12), the targetopia needs a totally different package to accommodate [`brms`](https://paul-buerkner.github.io/brms/) workflows.
+In the backend, each R Targetopia package should concentrate on one existing implementation of the given data science methodology. For example, [`stantargets`](https://wlandau.github.io/stantargets) focuses on [`cmdstanr`](https://mc-stan.org/cmdstanr/), and [`jagstargets`](https://wlandau.github.io/jagstargets) focuses on [`R2jags`](https://github.com/suyusung/R2jags). Do not be afraid to overfit to the methodology package.^[But please only use exported functions (`::`, not `:::`).] For example, [`stantargets`](https://wlandau.github.io/stantargets) chooses an interface that works extremely well with [`cmdstanr`](https://mc-stan.org/cmdstanr/) but poorly with [`brms`](https://paul-buerkner.github.io/brms/), and this tradeoff is completely appropriate. As [discussed here](https://github.com/wlandau/stantargets/issues/12), the R Targetopia needs a totally different package to accommodate [`brms`](https://paul-buerkner.github.io/brms/) workflows.
 
 ## Implementation
 
 ### Target factories
 
-Target factories are the heart of every targetopia package. A target factory is a function that calls [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) to produces a list of targets. Users supply minimal easy-to-understand inputs, and the factory constructs a sophisticated pipeline tailored to the scenario at hand.
+Target factories are the heart of every R Targetopia package. A target factory is a function that calls [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) to produces a list of targets. Users supply minimal easy-to-understand inputs, and the factory constructs a sophisticated pipeline tailored to the scenario at hand.
 
 The following sketch of a factory produces targets that track a data file, read it into R, and fit a model. It assumes we already wrote custom functions `read_data()` and `run_model()` defined elsewhere in our package.
 
@@ -129,13 +129,13 @@ The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring
 
 ### README.Rmd
 
-Feel free to include a README badge to let others know your package is part of the targetopia.
+Feel free to include a README badge to let others know your package is part of the R Targetopia.
 
 ```md
-[![targetopia](https://img.shields.io/badge/targetopia-member-000062?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
+[![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
 ```
 
-[![targetopia](https://img.shields.io/badge/targetopia-member-000062?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia.html)
+[![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&labelColor=gray)](https://wlandau.github.io/targetopia/)
 
 
 ## Testing
