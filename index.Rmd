@@ -1,6 +1,6 @@
 ---
 title: "The R Targetopia"
-description: "A new R package ecosystem for democratized reproducible pipelines at scale"
+description: "An R package ecosystem for democratized reproducible pipelines at scale"
 output: distill::distill_article
 ---
 
