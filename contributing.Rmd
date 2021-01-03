@@ -50,7 +50,7 @@ In `_targets.R`, the user writes one call to the factory instead of multiple cal
 # _targets.R
 library(targets)
 library(yourExamplePackage)
-tar_pipeline(target_factory("data.csv"))
+target_factory("data.csv") # End with a list of targets.
 ```
 
 ```{r}
