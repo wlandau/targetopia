@@ -82,7 +82,7 @@ Other ideas
 </th>
 <th style="font-weight:normal;">
 <br>
-Following precedent of [`stantargets`](https://wlandau.github.io/stantargets), it should be possible to create a targetopia package tailored to each of the most popular methodology packages whose users face intense computation, long runtimes, and rapid changes. Possibilities include [`greta`](https://greta-stats.org), [`nimble`](https://r-nimble.org), [`keras`](https://keras.rstudio.com), [`torch`](https://torch.mlverse.org), [`torchvision`](https://github.com/mlverse/torchvision), [`tidymodels`](https://github.com/tidymodels/tidymodels), [`mlr3`](https://mlr3.mlr-org.com/), and [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr).
+Following precedent of [`stantargets`](https://wlandau.github.io/stantargets), it should be possible to extend the R Targetopia to more methodology packages whose users face intense computation, long runtimes, and rapid changes. Possibilities include [`greta`](https://greta-stats.org), [`nimble`](https://r-nimble.org), [`keras`](https://keras.rstudio.com), [`torch`](https://torch.mlverse.org), [`torchvision`](https://github.com/mlverse/torchvision), [`tidymodels`](https://github.com/tidymodels/tidymodels), [`mlr3`](https://mlr3.mlr-org.com/), and [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr).
 </ul>
 <br><br>
 </th>
