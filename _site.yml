@@ -1,5 +1,5 @@
 name: "."
-title: "Targetopia"
+title: "R Targetopia"
 description: |
   An R package ecosystem for for democratized reproducible pipelines at scale.
 output_dir: "docs"
@@ -11,7 +11,7 @@ collections:
     feed_items_max: 100
 navbar:
   right:
-    - text: "Targetopia"
+    - text: "R Targetopia"
       href: index.html
     - text: "Packages"
       href: packages.html
