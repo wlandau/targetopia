@@ -49,7 +49,7 @@ knitr::opts_chunk$set(echo = FALSE)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) `jagstargets` is fully implemented, but it will not be publicly available until January 2021. Similar to [`stantargets`](https://wlandau.github.io/stantargets), `jagstargets` is a workflow framework for Bayesian data analysis, with support for both single MCMC runs and large-scale simulation studies. It invokes [JAGS](http://mcmc-jags.sourceforge.net/) through the [`R2jags`](https://github.com/suyusung/R2jags) package, which has nice features such as the ability to parallelize multiple chains across multiple local R processes.
+[![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) Like [`stantargets`](https://wlandau.github.io/stantargets), [`jagstargets`](https://wlandau.github.io/jagstargets) is a workflow framework for Bayesian data analysis, with support for both single MCMC runs and large-scale simulation studies. It invokes [JAGS](http://mcmc-jags.sourceforge.net/) through the [`R2jags`](https://github.com/suyusung/R2jags) package, which has nice features such as the ability to parallelize chains across local R processes.
 <br><br>
 </th>
 </tr>
