@@ -12,22 +12,22 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th>
-[<img src="https://raw.githubusercontent.com/wlandau/targets/main/man/figures/logo.png" height="139px">](https://wlandau.github.io/targets)
+[<img src="https://raw.githubusercontent.com/ropensci/targets/main/man/figures/logo.png" height="139px">](https://docs.ropensci.org/targets)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [`targets`](https://wlandau.github.io/targets) is the core engine of the targetopia. It learns the components of your data analysis project, runs the work with distributed computing, and skips steps that are already up to date. It reduces the runtime of successive runs, and it shows tangible evidence that your results match the underlying code and data.<br><br>
+[![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [`targets`](https://docs.ropensci.org/targets) is the core engine of the targetopia. It learns the components of your data analysis project, runs the work with distributed computing, and skips steps that are already up to date. It reduces the runtime of successive runs, and it shows tangible evidence that your results match the underlying code and data.<br><br>
 </th>
 </tr>
 
 <tr>
 <th>
-[<img src="https://raw.githubusercontent.com/wlandau/tarchetypes/main/man/figures/logo.png" height="139px">](https://wlandau.github.io/tarchetypes)
+[<img src="https://raw.githubusercontent.com/ropensci/tarchetypes/main/man/figures/logo.png" height="139px">](https://docs.ropensci.org/tarchetypes)
 </th>
 <th style="font-weight:normal;">
 <br>
 [![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[`tarchetypes`](https://wlandau.github.io/tarchetypes) makes it easy to add certain kinds of common tasks to reproducible pipelines. Most of its [functions](https://wlandau.github.io/tarchetypes/reference/index.html) create families of targets for [parameterized R Markdown](https://wlandau.github.io/tarchetypes/reference/tar_render_rep.html), [simulation studies](https://wlandau.github.io/tarchetypes/reference/tar_rep.html), and other general-purpose scenarios.<br><br>
+[`tarchetypes`](https://docs.ropensci.org/tarchetypes) makes it easy to add certain kinds of common tasks to reproducible pipelines. Most of its [functions](https://docs.ropensci.org/tarchetypes/reference/index.html) create families of targets for [parameterized R Markdown](https://docs.ropensci.org/tarchetypes/reference/tar_render_rep.html), [simulation studies](https://docs.ropensci.org/tarchetypes/reference/tar_rep.html), and other general-purpose scenarios.<br><br>
 </th>
 </tr>
 
@@ -71,7 +71,7 @@ knitr::opts_chunk$set(echo = FALSE)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `tarmarkdown` is an idea first proposed [here](https://github.com/wlandau/tarchetypes/issues/23#issuecomment-748329846). An implementation has not started, and it is unclear whether this package is actually necessary (as opposed to just extending [`tarchetypes`](https://github.com/wlandau/tarchetypes)). The goal is to accommodate dependency-aware literate programming workflows, where computationally intense targets build upstream and inexpensive R Markdown reports render downstream. Functions in [`tarchetypes`](https://github.com/wlandau/tarchetypes) already achieve this to a limited degree, but there is not currently functionality to handle more complicated use cases such as [`bookdown`](https://bookdown.org) books, [R Markdown sites](https://rmarkdown.rstudio.com/lesson-13.html), or [`workflowr`](https://jdblischak.github.io/workflowr/) projects.
+[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `tarmarkdown` is an idea first proposed [here](https://github.com/ropensci/tarchetypes/issues/23#issuecomment-748329846). An implementation has not started, and it is unclear whether this package is actually necessary (as opposed to just extending [`tarchetypes`](https://github.com/ropensci/tarchetypes)). The goal is to accommodate dependency-aware literate programming workflows, where computationally intense targets build upstream and inexpensive R Markdown reports render downstream. Functions in [`tarchetypes`](https://github.com/ropensci/tarchetypes) already achieve this to a limited degree, but there is not currently functionality to handle more complicated use cases such as [`bookdown`](https://bookdown.org) books, [R Markdown sites](https://rmarkdown.rstudio.com/lesson-13.html), or [`workflowr`](https://jdblischak.github.io/workflowr/) projects.
 <br><br>
 </th>
 </tr>

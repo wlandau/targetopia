@@ -15,7 +15,7 @@ The R Targetopia has the potential to cover multiple fields of Statistics and da
 ### Prerequisites
 
 1. Domain expertise in a subfield of data science.
-1. Familiarity with [`targets`](https://wlandau.github.io/targets). (Resources [linked here](https://wlandau.github.io/targets).)
+1. Familiarity with [`targets`](https://docs.ropensci.org/targets). (Resources [linked here](https://docs.ropensci.org/targets).)
 1. [R package development](https://r-pkgs.org/), including [documentation](https://r-pkgs.org/man.html) and [testing](https://r-pkgs.org/tests.html). The [rOpenSci development guide](https://devguide.ropensci.org/) is super helpful.
 
 ### Scope
@@ -26,7 +26,7 @@ R Targetopia packages are highly specialized, and each is tailored to an existin
 
 ### Target factories
 
-R Targetopia packages leverage target factories to make pipeline construction easier. A target factory is a function that accepts simple inputs, calls [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html), and produces a list of target objects. Sketch:
+R Targetopia packages leverage target factories to make pipeline construction easier. A target factory is a function that accepts simple inputs, calls [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html), and produces a list of target objects. Sketch:
 
 ```{r}
 # R/factory.R
@@ -47,7 +47,7 @@ target_factory <- function(file) {
 }
 ```
 
-In `_targets.R`, the user writes one call to the factory instead of multiple calls to [`tar_target()`](https://wlandau.github.io/targets/reference/tar_target.html).^[Users can still write their own downstream [`tar_target()`](https://wlandau.github.io/targets/reference/tar_target.html) calls in the pipeline for custom postprocessing.] This shorthand makes user-side code simpler and more concise, and it abstracts away low-level configuration settings like `format = "file"` and `deployment = "main"`.
+In `_targets.R`, the user writes one call to the factory instead of multiple calls to [`tar_target()`](https://docs.ropensci.org/targets/reference/tar_target.html).^[Users can still write their own downstream [`tar_target()`](https://docs.ropensci.org/targets/reference/tar_target.html) calls in the pipeline for custom postprocessing.] This shorthand makes user-side code simpler and more concise, and it abstracts away low-level configuration settings like `format = "file"` and `deployment = "main"`.
 
 ```{r}
 # _targets.R
@@ -67,7 +67,7 @@ tar_manifest(fields = command)
 #> 3 model "run_model(data)"
 ```
 
-Sometimes, these factories require metaprogramming: for example, to allow customized target names. Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html).
+Sometimes, these factories require metaprogramming: for example, to allow customized target names. Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html).
 
 ```{r}
 # R/factory.R
@@ -109,14 +109,14 @@ tar_manifest(fields = command)
 
 ### Settings
 
-Situational knowledge helps us supply optimal arguments to [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) that the user should not need to bother with. We have four such examples in `target_factory()` above.
+Situational knowledge helps us supply optimal arguments to [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html) that the user should not need to bother with. We have four such examples in `target_factory()` above.
 
 1. `deployment = "main"`: the data file lives on the user's local machine or login node, so remote workers in [high-performance computing](https://wlandau.github.io/targets-manual/hpc.html) scenarios may not be able to access it. Targets like these should not run on remote compute nodes.
 1. `format = "file"`: track the input data file and invalidate the appropriate targets when the contents of the file change.
 1. `format = "fst_tbl"`: the `"fst_tbl"` is a specialized format to efficiently store and retrieve data frames.
 1. `format = "qs"`: efficient general-purpose storage format for R objects.
 
-Many of the remaining arguments to [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) should be exposed as arguments to the factory (omitted from our example `target_factory()` for brevity) with default values from [`tar_option_get()`](https://wlandau.github.io/targets/reference/tar_option_get.html). Examples may include `priority` and `cue` because users may have good reasons to set these. However, arguments like `command`, `pattern`, `deps`, and `string` are low level and should not be supported.
+Many of the remaining arguments to [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html) should be exposed as arguments to the factory (omitted from our example `target_factory()` for brevity) with default values from [`tar_option_get()`](https://docs.ropensci.org/targets/reference/tar_option_get.html). Examples may include `priority` and `cue` because users may have good reasons to set these. However, arguments like `command`, `pattern`, `deps`, and `string` are low level and should not be supported.
 
 ### Branching
 
@@ -128,13 +128,13 @@ Many of the remaining arguments to [`tar_target_raw()`](https://wlandau.github.i
 
 #### Dynamic branching
 
-[Dynamic branching](https://wlandau.github.io/targets-manual/dynamic.html) is best suited to larger collections of homogeneous tasks whose inputs are not necessarily known in advance. A factory with dynamic branching should create the `pattern` argument of [`tar_target_raw()`](https://wlandau.github.io/targets/reference/tar_target_raw.html) with behind-the-scenes metaprogramming, and it should support [batching](https://wlandau.github.io/targets-manual/dynamic.html#batching) to sensibly partition the work. Users should control the number of batches and reps per batch, but they should not be able to control the `pattern` argument. Examples of batching include [`tar_rep_raw()`](https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html), [`tar_stan_mcmc_rep_summary()`](https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html) and the [`targets-stan`](https://github.com/wlandau/targets-stan/) workflow.
+[Dynamic branching](https://wlandau.github.io/targets-manual/dynamic.html) is best suited to larger collections of homogeneous tasks whose inputs are not necessarily known in advance. A factory with dynamic branching should create the `pattern` argument of [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html) with behind-the-scenes metaprogramming, and it should support [batching](https://wlandau.github.io/targets-manual/dynamic.html#batching) to sensibly partition the work. Users should control the number of batches and reps per batch, but they should not be able to control the `pattern` argument. Examples of batching include [`tar_rep_raw()`](https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html), [`tar_stan_mcmc_rep_summary()`](https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html) and the [`targets-stan`](https://github.com/wlandau/targets-stan/) workflow.
 
 ## Documentation
 
 ### Examples
 
-The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring should run quickly and avoid creating non-temporary files, which is why the examples in [`stantargets`](https://github.com/wlandau/stantargets) are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside [`tar_dir()`](https://wlandau.github.io/targets/reference/tar_dir.html) to run the code in a temporary directory.
+The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring should run quickly and avoid creating non-temporary files, which is why the examples in [`stantargets`](https://github.com/wlandau/stantargets) are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside [`tar_dir()`](https://docs.ropensci.org/targets/reference/tar_dir.html) to run the code in a temporary directory.
 
 ### README.Rmd
 
@@ -151,17 +151,17 @@ Feel free to include a README badge to let others know your package is part of t
 
 ### What to test
 
-1. Results: write a pipeline with [`tar_script()`](https://wlandau.github.io/targets/reference/tar_script.html), run it with [`tar_make()`](https://wlandau.github.io/targets/reference/tar_make.html), and inspect the output with [`tar_read()`](https://wlandau.github.io/targets/reference/tar_read.html).
-2. Manifest: use [`tar_manifest()`](https://wlandau.github.io/targets/reference/tar_manifest.html) to check that the pipeline has the correct number of targets with the correct commands and configuration settings.
-3. Dependencies: use the graph edges from  [`tar_network()`](https://wlandau.github.io/targets/reference/tar_network.html) to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file target to the data target.
+1. Results: write a pipeline with [`tar_script()`](https://docs.ropensci.org/targets/reference/tar_script.html), run it with [`tar_make()`](https://docs.ropensci.org/targets/reference/tar_make.html), and inspect the output with [`tar_read()`](https://docs.ropensci.org/targets/reference/tar_read.html).
+2. Manifest: use [`tar_manifest()`](https://docs.ropensci.org/targets/reference/tar_manifest.html) to check that the pipeline has the correct number of targets with the correct commands and configuration settings.
+3. Dependencies: use the graph edges from  [`tar_network()`](https://docs.ropensci.org/targets/reference/tar_network.html) to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file target to the data target.
 
 ### Speed
 
-[Unit tests](https://testthat.r-lib.org/) should run quickly if possible. To increase testing speed, you may wish to set `callr_function = NULL` in functions like [`tar_make()`](https://wlandau.github.io/targets/reference/tar_make.html), but be warned that the result will be sensitive to functions you define in the testing environment. [CRAN](https://cran.r-project.org/) has strict policies about total check time, and [`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html) can help.
+[Unit tests](https://testthat.r-lib.org/) should run quickly if possible. To increase testing speed, you may wish to set `callr_function = NULL` in functions like [`tar_make()`](https://docs.ropensci.org/targets/reference/tar_make.html), but be warned that the result will be sensitive to functions you define in the testing environment. [CRAN](https://cran.r-project.org/) has strict policies about total check time, and [`testthat::skip_on_cran()`](https://testthat.r-lib.org/reference/skip.html) can help.
 
 ### Environment
 
-Tests should avoid creating non-temporary files, and they should avoid permanently changing [target-specific options](https://wlandau.github.io/targets/reference/tar_option_set.html) that could affect other tests. [`tar_test()`](https://wlandau.github.io/targets/reference/tar_test.html) is a drop-in replacement for [`test_that()`](https://testthat.r-lib.org/reference/test_that.html) which solves these problems. It runs the test in a temporary directory, and it automatically calls [`tar_option_reset()`](https://wlandau.github.io/targets/reference/tar_option_set.html) when the test is over. Tests using [`tar_test()`](https://wlandau.github.io/targets/reference/tar_test.html) can freely create local files and set target options.
+Tests should avoid creating non-temporary files, and they should avoid permanently changing [target-specific options](https://docs.ropensci.org/targets/reference/tar_option_set.html) that could affect other tests. [`tar_test()`](https://docs.ropensci.org/targets/reference/tar_test.html) is a drop-in replacement for [`test_that()`](https://testthat.r-lib.org/reference/test_that.html) which solves these problems. It runs the test in a temporary directory, and it automatically calls [`tar_option_reset()`](https://docs.ropensci.org/targets/reference/tar_option_set.html) when the test is over. Tests using [`tar_test()`](https://docs.ropensci.org/targets/reference/tar_test.html) can freely create local files and set target options.
 
 ## rOpenSci
 
