@@ -95,7 +95,6 @@ If you call `substitute()` from inside a function (or other non-global environme
 
 ```{r, eval = TRUE}
 f <- function(arg) substitute(f(arg = arg))
-
 f(arg = f(x + y))
 ```
 
