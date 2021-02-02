@@ -67,12 +67,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
-`tarmarkdown`
+`shinytargets`
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `tarmarkdown` is an idea first proposed [here](https://github.com/ropensci/tarchetypes/issues/23#issuecomment-748329846). An implementation has not started, and it is unclear whether this package is actually necessary (as opposed to just extending [`tarchetypes`](https://github.com/ropensci/tarchetypes)). The goal is to accommodate dependency-aware literate programming workflows, where computationally intense targets build upstream and inexpensive R Markdown reports render downstream. Functions in [`tarchetypes`](https://github.com/ropensci/tarchetypes) already achieve this to a limited degree, but there is not currently functionality to handle more complicated use cases such as [`bookdown`](https://bookdown.org) books, [R Markdown sites](https://rmarkdown.rstudio.com/lesson-13.html), or [`workflowr`](https://jdblischak.github.io/workflowr/) projects.
-<br><br>
+[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) 
+<br><br> `shinytargets` is a concept first proposed [here](https://github.com/ropensci/targets/discussions/289). The idea is to make it easier to `targets` pipelines easier to manage from inside a Shiny app. The major issues are pipeline construction and storage management.
 </th>
 </tr>
 
