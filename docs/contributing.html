@@ -446,8 +446,15 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     top: 0;
   }
 
+  /* adjust viewport for navbar height */
+  /* helps vertically center bootstrap (non-distill) content */
+  .min-vh-100 {
+    min-height: calc(100vh - 100px) !important;
+  }
+
   </style>
 
+  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
   <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
   <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
@@ -555,19 +562,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
             var results = fuse.search(query, searchOptions);
             callback(results
               .map(function(result) { return result.item; })
-              .filter(function(item) { return !!item.description; })
             );
           },
           templates: {
             suggestion: function(suggestion) {
+              var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
+                ? `<img src="${offsetURL(suggestion.preview)}"</img>`
+                : '';
               var html = `
                 <div class="search-item">
                   <h3>${suggestion.title}</h3>
                   <div class="search-item-description">
-                    ${suggestion.description}
+                    ${suggestion.description || ''}
                   </div>
                   <div class="search-item-preview">
-                    <img src="${suggestion.preview ? offsetURL(suggestion.preview) : ''}"</img>
+                    ${img}
                   </div>
                 </div>
               `;
@@ -590,6 +599,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <style type="text/css">
+
+  .nav-search {
+    font-size: x-small;
+  }
 
   /* Algolioa Autocomplete */
 
@@ -665,6 +678,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   }
 
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
+    font-size: 1rem;
     margin-block-start: 0;
     margin-block-end: 5px;
   }
@@ -892,6 +906,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-decoration: underline;
   }
 
+  d-article details {
+    grid-column: text;
+    margin-bottom: 0.8em;
+  }
+
   @media(min-width: 768px) {
 
   d-article pre,
@@ -1046,6 +1065,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   div.hanging-indent{
     margin-left: 1em; text-indent: -1em;
+  }
+
+  /* Citation hover box */
+
+  .tippy-box[data-theme~=light-border] {
+    background-color: rgba(250, 250, 250, 0.95);
+  }
+
+  .tippy-content > p {
+    margin-bottom: 0;
+    padding: 2px;
   }
 
 
@@ -1713,7 +1743,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       var layout = $(this).attr('data-layout');
 
       // apply layout to markdown level block elements
-      var elements = $(this).children().not('div.sourceCode, pre, script');
+      var elements = $(this).children().not('details, div.sourceCode, pre, script');
       elements.each(function(i, el) {
         var layout_div = $('<div class="' + layout + '"></div>');
         if (layout_div.hasClass('shaded')) {
@@ -1828,6 +1858,20 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // move appendix-bottom entries to the bottom
       $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
       $('.appendix-bottom').remove();
+
+      // hoverable references
+      $('span.citation[data-cites]').each(function() {
+        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        window.tippy(this, {
+          allowHTML: true,
+          content: refHtml,
+          maxWidth: 500,
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start'
+        });
+      });
 
       // clear polling timer
       clearInterval(tid);
@@ -1988,8 +2032,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.6/header-attrs.js"></script>
-  <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+  <script src="site_libs/header-attrs-2.6.4/header-attrs.js"></script>
+  <script src="site_libs/popper-2.6.0/popper.min.js"></script>
+  <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
   <script src="site_libs/anchor-4.2.2/anchor.min.js"></script>
   <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
   <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
@@ -2049,17 +2096,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h3 id="prerequisites">Prerequisites</h3>
 <ol type="1">
 <li>Domain expertise in a subfield of data science.</li>
-<li>Familiarity with <a href="https://wlandau.github.io/targets"><code>targets</code></a>. (Resources <a href="https://wlandau.github.io/targets">linked here</a>.)</li>
+<li>Familiarity with <a href="https://docs.ropensci.org/targets"><code>targets</code></a>. (Resources <a href="https://docs.ropensci.org/targets">linked here</a>.)</li>
 <li><a href="https://r-pkgs.org/">R package development</a>, including <a href="https://r-pkgs.org/man.html">documentation</a> and <a href="https://r-pkgs.org/tests.html">testing</a>. The <a href="https://devguide.ropensci.org/">rOpenSci development guide</a> is super helpful.</li>
 </ol>
 <h3 id="scope">Scope</h3>
 <p>R Targetopia packages are highly specialized, and each is tailored to an existing implementation of the underlying methodology. For example, <a href="https://wlandau.github.io/stantargets"><code>stantargets</code></a> builds on <a href="https://mc-stan.org/cmdstanr/"><code>cmdstanr</code></a>, and the former inherits interface patterns and documentation from the latter. <a href="https://paul-buerkner.github.io/brms/"><code>brms</code></a> compatibility is out of scope and would need to be implemented in its own R Targetopia package (<a href="https://github.com/wlandau/stantargets/issues/12">discussion here</a>).</p>
 <h2 id="implementation">Implementation</h2>
 <h3 id="target-factories">Target factories</h3>
-<p>R Targetopia packages leverage target factories to make pipeline construction easier. A target factory is a function that accepts simple inputs, calls <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>, and produces a list of target objects. Sketch:</p>
+<p>R Targetopia packages leverage target factories to make pipeline construction easier. A target factory is a function that accepts simple inputs, calls <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>, and produces a list of target objects. Sketch:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># R/factory.R</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R/factory.R</span>
 <span class='co'>#' @title Example target factory.</span>
 <span class='co'>#' @description Define 3 targets:</span>
 <span class='co'>#' 1. Track the user-supplied data file.</span>
@@ -2078,11 +2125,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </code></pre>
 </div>
 </div>
-<p>In <code>_targets.R</code>, the user writes one call to the factory instead of multiple calls to <a href="https://wlandau.github.io/targets/reference/tar_target.html"><code>tar_target()</code></a>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> This shorthand makes user-side code simpler and more concise, and it abstracts away low-level configuration settings like <code>format = "file"</code> and <code>deployment = "main"</code>.</p>
+<p>In <code>_targets.R</code>, the user writes one call to the factory instead of multiple calls to <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> This shorthand makes user-side code simpler and more concise, and it abstracts away low-level configuration settings like <code>format = "file"</code> and <code>deployment = "main"</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># _targets.R</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://wlandau.github.io/targets/'>targets</a></span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># _targets.R</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://docs.ropensci.org/targets/'>targets</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>yourExamplePackage</span><span class='op'>)</span>
 <span class='fu'>target_factory</span><span class='op'>(</span><span class='st'>"data.csv"</span><span class='op'>)</span> <span class='co'># End with a list of targets.</span>
 </code></pre>
@@ -2090,8 +2137,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># R console</span>
-<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R console</span>
+<span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
 <span class='co'>#&gt; # A tibble: 3 x 2</span>
 <span class='co'>#&gt;   name  command          </span>
 <span class='co'>#&gt;   &lt;chr&gt; &lt;chr&gt;            </span>
@@ -2101,10 +2148,51 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </code></pre>
 </div>
 </div>
-<p>Sometimes, these factories require metaprogramming: for example, to allow customized target names. Functions <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_eval.html"><code>tar_eval()</code></a> help create <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">language objects</a> for the <code>command</code> argument of <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>.</p>
+<h3 id="metaprogramming">Metaprogramming</h3>
+<p>Target factories invoke the <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> function. Whereas <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a> is for end users, <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> is for developers. <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> expects a character string for the <code>name</code> argument and expression objects for arguments <code>command</code> and <code>pattern</code>. Functions <code>deparse()</code>, <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_eval.html"><code>tar_eval()</code></a> can help you create these arguments.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<p>The <code>quote()</code> function captures arbitrary expressions.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># R/factory.R</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>f(x + y)</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code> language f(x + y)</code></pre>
+</div>
+<p>The <code>deparse()</code> function turns expressions into characters.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>[1] &quot;f(x + y)&quot;</code></pre>
+</div>
+<p>The <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a> function quotes code, creates expressions, and inserts arbitrary values into symbols.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='va'>arg</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>arg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>f(arg = x + y)</code></pre>
+</div>
+<p>If you call <code>substitute()</code> from inside a function (or other non-global environment) then <code>env</code> defaults to the calling environment.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>arg</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='va'>arg</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>f(arg = f(x + y))</code></pre>
+</div>
+<p>Together, <code>quote()</code>, <code>deparse()</code>, and <code>substitute()</code> help you create factories that accept friendly user inputs and supply safe arguments to <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R/factory.R</span>
 <span class='co'>#' @title Example target factory.</span>
 <span class='co'>#' @description Define 3 targets:</span>
 <span class='co'>#' 1. Track the user-supplied data file.</span>
@@ -2123,9 +2211,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <span class='va'>command_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span>
   <span class='va'>command_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sym_data</span><span class='op'>)</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
-    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
-    <span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span>
+    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
+    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span>
   <span class='op'>)</span>
 <span class='op'>}</span>
 </code></pre>
@@ -2133,8 +2221,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre><code><span class='co'># R console</span>
-<span class='fu'><a href='https://wlandau.github.io/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R console</span>
+<span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
 <span class='co'>#&gt; # A tibble: 3 x 2</span>
 <span class='co'>#&gt;   name        command                  </span>
 <span class='co'>#&gt;   &lt;chr&gt;       &lt;chr&gt;                    </span>
@@ -2145,38 +2233,38 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 </div>
 <h3 id="settings">Settings</h3>
-<p>Situational knowledge helps us supply optimal arguments to <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> that the user should not need to bother with. We have four such examples in <code>target_factory()</code> above.</p>
+<p>Situational knowledge helps us supply optimal arguments to <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> that the user should not need to bother with. We have four such examples in <code>target_factory()</code> above.</p>
 <ol type="1">
 <li><code>deployment = "main"</code>: the data file lives on the user’s local machine or login node, so remote workers in <a href="https://wlandau.github.io/targets-manual/hpc.html">high-performance computing</a> scenarios may not be able to access it. Targets like these should not run on remote compute nodes.</li>
 <li><code>format = "file"</code>: track the input data file and invalidate the appropriate targets when the contents of the file change.</li>
 <li><code>format = "fst_tbl"</code>: the <code>"fst_tbl"</code> is a specialized format to efficiently store and retrieve data frames.</li>
 <li><code>format = "qs"</code>: efficient general-purpose storage format for R objects.</li>
 </ol>
-<p>Many of the remaining arguments to <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> should be exposed as arguments to the factory (omitted from our example <code>target_factory()</code> for brevity) with default values from <a href="https://wlandau.github.io/targets/reference/tar_option_get.html"><code>tar_option_get()</code></a>. Examples may include <code>priority</code> and <code>cue</code> because users may have good reasons to set these. However, arguments like <code>command</code>, <code>pattern</code>, <code>deps</code>, and <code>string</code> are low level and should not be supported.</p>
+<p>Many of the remaining arguments to <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> should be exposed as arguments to the factory (omitted from our example <code>target_factory()</code> for brevity) with default values from <a href="https://docs.ropensci.org/targets/reference/tar_option_get.html"><code>tar_option_get()</code></a>. Examples may include <code>priority</code> and <code>cue</code> because users may have good reasons to set these. However, arguments like <code>command</code>, <code>pattern</code>, <code>deps</code>, and <code>string</code> are low level and should not be supported.</p>
 <h3 id="branching">Branching</h3>
 <p><a href="https://wlandau.github.io/targets-manual/dynamic.html">Dynamic branching</a> and <a href="https://wlandau.github.io/targets-manual/static.html">static branching</a> are difficult for most end users, so the mechanics of branching should happen behind the scenes. Simplification and guardrails are critical.</p>
 <h4 id="static-branching">Static branching</h4>
 <p><a href="https://wlandau.github.io/targets-manual/static.html">Static branching</a> works best with a small number of potentially heterogeneous tasks. Functions <a href="https://wlandau.github.io/tarchetypes/reference/tar_map.html"><code>tar_map()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_combine_raw.html"><code>tar_combine_raw()</code></a>, <a href="https://wlandau.github.io/tarchetypes/reference/tar_sub.html"><code>tar_sub()</code></a>, and <a href="https://wlandau.github.io/tarchetypes/reference/tar_map.html"><code>tar_eval()</code></a> can help with the implementation internally. User-side inputs should be as simple as possible. For example, the <a href="https://wlandau.github.io/stantargets/reference/tar_stan_mcmc.html"><code>stantargets::tar_stan_mcmc()</code></a> factory accepts a character vector of Stan model files and internally calls <a href="https://wlandau.github.io/tarchetypes/reference/tar_map.html"><code>tar_map()</code></a> to create a group of targets for each model.</p>
 <h4 id="dynamic-branching">Dynamic branching</h4>
-<p><a href="https://wlandau.github.io/targets-manual/dynamic.html">Dynamic branching</a> is best suited to larger collections of homogeneous tasks whose inputs are not necessarily known in advance. A factory with dynamic branching should create the <code>pattern</code> argument of <a href="https://wlandau.github.io/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> with behind-the-scenes metaprogramming, and it should support <a href="https://wlandau.github.io/targets-manual/dynamic.html#batching">batching</a> to sensibly partition the work. Users should control the number of batches and reps per batch, but they should not be able to control the <code>pattern</code> argument. Examples of batching include <a href="https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html"><code>tar_rep_raw()</code></a>, <a href="https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html"><code>tar_stan_mcmc_rep_summary()</code></a> and the <a href="https://github.com/wlandau/targets-stan/"><code>targets-stan</code></a> workflow.</p>
+<p><a href="https://wlandau.github.io/targets-manual/dynamic.html">Dynamic branching</a> is best suited to larger collections of homogeneous tasks whose inputs are not necessarily known in advance. A factory with dynamic branching should create the <code>pattern</code> argument of <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a> with behind-the-scenes metaprogramming, and it should support <a href="https://wlandau.github.io/targets-manual/dynamic.html#batching">batching</a> to sensibly partition the work. Users should control the number of batches and reps per batch, but they should not be able to control the <code>pattern</code> argument. Examples of batching include <a href="https://wlandau.github.io/tarchetypes/reference/tar_rep_raw.html"><code>tar_rep_raw()</code></a>, <a href="https://wlandau.github.io/stantargets/reference/tar_stan_mcmc_rep_summary.html"><code>tar_stan_mcmc_rep_summary()</code></a> and the <a href="https://github.com/wlandau/targets-stan/"><code>targets-stan</code></a> workflow.</p>
 <h2 id="documentation">Documentation</h2>
 <h3 id="examples">Examples</h3>
-<p>The <code>@examples</code> field of the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> docstring should run quickly and avoid creating non-temporary files, which is why the examples in <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside <a href="https://wlandau.github.io/targets/reference/tar_dir.html"><code>tar_dir()</code></a> to run the code in a temporary directory.</p>
+<p>The <code>@examples</code> field of the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> docstring should run quickly and avoid creating non-temporary files, which is why the examples in <a href="https://github.com/wlandau/stantargets"><code>stantargets</code></a> are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside <a href="https://docs.ropensci.org/targets/reference/tar_dir.html"><code>tar_dir()</code></a> to run the code in a temporary directory.</p>
 <h3 id="readme.rmd">README.Rmd</h3>
 <p>Feel free to include a README badge to let others know your package is part of the R Targetopia.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">[</span><span class="al">![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray)</span><span class="co">](https://wlandau.github.io/targetopia/)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">[</span><span class="al">![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray)</span><span class="co">](https://wlandau.github.io/targetopia/)</span></span></code></pre></div>
 <p><a href="https://wlandau.github.io/targetopia/"><img src="https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray" alt="R Targetopia" /></a></p>
 <h2 id="testing">Testing</h2>
 <h3 id="what-to-test">What to test</h3>
 <ol type="1">
-<li>Results: write a pipeline with <a href="https://wlandau.github.io/targets/reference/tar_script.html"><code>tar_script()</code></a>, run it with <a href="https://wlandau.github.io/targets/reference/tar_make.html"><code>tar_make()</code></a>, and inspect the output with <a href="https://wlandau.github.io/targets/reference/tar_read.html"><code>tar_read()</code></a>.</li>
-<li>Manifest: use <a href="https://wlandau.github.io/targets/reference/tar_manifest.html"><code>tar_manifest()</code></a> to check that the pipeline has the correct number of targets with the correct commands and configuration settings.</li>
-<li>Dependencies: use the graph edges from <a href="https://wlandau.github.io/targets/reference/tar_network.html"><code>tar_network()</code></a> to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file target to the data target.</li>
+<li>Results: write a pipeline with <a href="https://docs.ropensci.org/targets/reference/tar_script.html"><code>tar_script()</code></a>, run it with <a href="https://docs.ropensci.org/targets/reference/tar_make.html"><code>tar_make()</code></a>, and inspect the output with <a href="https://docs.ropensci.org/targets/reference/tar_read.html"><code>tar_read()</code></a>.</li>
+<li>Manifest: use <a href="https://docs.ropensci.org/targets/reference/tar_manifest.html"><code>tar_manifest()</code></a> to check that the pipeline has the correct number of targets with the correct commands and configuration settings.</li>
+<li>Dependencies: use the graph edges from <a href="https://docs.ropensci.org/targets/reference/tar_network.html"><code>tar_network()</code></a> to check the dependency relationships among the targets. For example, in our target factory from earlier, there should be a directed edge from the input file target to the data target.</li>
 </ol>
 <h3 id="speed">Speed</h3>
-<p><a href="https://testthat.r-lib.org/">Unit tests</a> should run quickly if possible. To increase testing speed, you may wish to set <code>callr_function = NULL</code> in functions like <a href="https://wlandau.github.io/targets/reference/tar_make.html"><code>tar_make()</code></a>, but be warned that the result will be sensitive to functions you define in the testing environment. <a href="https://cran.r-project.org/">CRAN</a> has strict policies about total check time, and <a href="https://testthat.r-lib.org/reference/skip.html"><code>testthat::skip_on_cran()</code></a> can help.</p>
+<p><a href="https://testthat.r-lib.org/">Unit tests</a> should run quickly if possible. To increase testing speed, you may wish to set <code>callr_function = NULL</code> in functions like <a href="https://docs.ropensci.org/targets/reference/tar_make.html"><code>tar_make()</code></a>, but be warned that the result will be sensitive to functions you define in the testing environment. <a href="https://cran.r-project.org/">CRAN</a> has strict policies about total check time, and <a href="https://testthat.r-lib.org/reference/skip.html"><code>testthat::skip_on_cran()</code></a> can help.</p>
 <h3 id="environment">Environment</h3>
-<p>Tests should avoid creating non-temporary files, and they should avoid permanently changing <a href="https://wlandau.github.io/targets/reference/tar_option_set.html">target-specific options</a> that could affect other tests. <a href="https://wlandau.github.io/targets/reference/tar_test.html"><code>tar_test()</code></a> is a drop-in replacement for <a href="https://testthat.r-lib.org/reference/test_that.html"><code>test_that()</code></a> which solves these problems. It runs the test in a temporary directory, and it automatically calls <a href="https://wlandau.github.io/targets/reference/tar_option_set.html"><code>tar_option_reset()</code></a> when the test is over. Tests using <a href="https://wlandau.github.io/targets/reference/tar_test.html"><code>tar_test()</code></a> can freely create local files and set target options.</p>
+<p>Tests should avoid creating non-temporary files, and they should avoid permanently changing <a href="https://docs.ropensci.org/targets/reference/tar_option_set.html">target-specific options</a> that could affect other tests. <a href="https://docs.ropensci.org/targets/reference/tar_test.html"><code>tar_test()</code></a> is a drop-in replacement for <a href="https://testthat.r-lib.org/reference/test_that.html"><code>test_that()</code></a> which solves these problems. It runs the test in a temporary directory, and it automatically calls <a href="https://docs.ropensci.org/targets/reference/tar_option_set.html"><code>tar_option_reset()</code></a> when the test is over. Tests using <a href="https://docs.ropensci.org/targets/reference/tar_test.html"><code>tar_test()</code></a> can freely create local files and set target options.</p>
 <h2 id="ropensci">rOpenSci</h2>
 <p>R Targetopia packages support <a href="https://devguide.ropensci.org/policies.html#package-categories">workflow automation</a>, making them excellent candidates for <a href="https://github.com/ropensci/software-review">rOpenSci software review</a>. The review process is a valuable source of feedback, and the <a href="https://ropensci.org/">rOpenSci</a> community is welcoming and supportive. More details are <a href="https://devguide.ropensci.org/softwarereviewintro.html">available here</a>.</p>
 <h2 id="contact">Contact</h2>
@@ -2201,11 +2289,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <a href="https://twitter.com/wmlandau"><code>@wmlandau</code></a>
 </li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Users can still write their own downstream <a href="https://wlandau.github.io/targets/reference/tar_target.html"><code>tar_target()</code></a> calls in the pipeline for custom postprocessing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Users can still write their own downstream <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a> calls in the pipeline for custom postprocessing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>For more information about metaprogramming in base R, see the <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">“Computing on the Language” chapter of the Advanced R book</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->

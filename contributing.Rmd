@@ -67,7 +67,39 @@ tar_manifest(fields = command)
 #> 3 model "run_model(data)"
 ```
 
-Sometimes, these factories require metaprogramming: for example, to allow customized target names. Functions [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) help create [language objects](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions) for the `command` argument of [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html).
+### Metaprogramming
+
+Target factories invoke the [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html) function. Whereas [`tar_target()`](https://docs.ropensci.org/targets/reference/tar_target.html) is for end users, [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html) is for developers. [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html) expects a character string for the `name` argument and expression objects for arguments `command` and `pattern`. Functions `deparse()`, [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute), [`tar_sub()`](https://wlandau.github.io/tarchetypes/reference/tar_sub.html), and [`tar_eval()`](https://wlandau.github.io/tarchetypes/reference/tar_eval.html) can help you create these arguments.^[For more information about metaprogramming in base R, see the ["Computing on the Language" chapter of the Advanced R book](http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions).]
+
+The `quote()` function captures arbitrary expressions.
+
+```{r, eval = TRUE}
+quote(f(x + y))
+
+str(quote(f(x + y)))
+```
+
+The `deparse()` function turns expressions into characters.
+
+```{r, eval = TRUE}
+deparse(quote(f(x + y)))
+```
+
+The  [`substitute()`](http://adv-r.had.co.nz/Computing-on-the-language.html#substitute) function quotes code, creates expressions, and inserts arbitrary values into symbols.
+
+```{r, eval = TRUE}
+substitute(f(arg = arg), env = list(arg = quote(x + y)))
+```
+
+If you call `substitute()` from inside a function (or other non-global environment) then `env` defaults to the calling environment.
+
+```{r, eval = TRUE}
+f <- function(arg) substitute(f(arg = arg))
+
+f(arg = f(x + y))
+```
+
+Together, `quote()`, `deparse()`, and `substitute()` help you create factories that accept friendly user inputs and supply safe arguments to [`tar_target_raw()`](https://docs.ropensci.org/targets/reference/tar_target_raw.html).
 
 ```{r}
 # R/factory.R
