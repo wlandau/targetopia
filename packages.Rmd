@@ -67,17 +67,6 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
-`shinytargets`
-</th>
-<th style="font-weight:normal;">
-<br>
-[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) 
-<br><br> `shinytargets` is a concept first proposed [here](https://github.com/ropensci/targets/discussions/289). The idea is to make it easier to `targets` pipelines easier to manage from inside a Shiny app. The major issues are pipeline construction and storage management.
-</th>
-</tr>
-
-<tr>
-<th style="text-align: center">
 Other ideas
 </th>
 <th style="font-weight:normal;">
