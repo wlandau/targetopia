@@ -33,12 +33,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th>
-[<img src="https://raw.githubusercontent.com/wlandau/stantargets/main/man/figures/logo.png" height="139px">](https://wlandau.github.io/stantargets)
+[<img src="https://raw.githubusercontent.com/wlandau/stantargets/main/man/figures/logo.png" height="139px">](https://docs.ropensci.org/stantargets/)
 </th>
 <th style="font-weight:normal;">
 <br>
 [![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) 
-[`stantargets`](https://wlandau.github.io/stantargets) is a workflow framework for Bayesian data analysis with [`cmdstanr`](https://mc-stan.org/cmdstanr/). With concise, easy-to-use syntax, it defines versatile families of targets tailored to Bayesian statistics, from a [single MCMC run with postprocessing](https://wlandau.github.io/stantargets/articles/mcmc.html) to [large simulation studies](https://wlandau.github.io/stantargets/articles/mcmc_rep.html).
+[`stantargets`](https://docs.ropensci.org/stantargets/) is a workflow framework for Bayesian data analysis with [`cmdstanr`](https://mc-stan.org/cmdstanr/). With concise, easy-to-use syntax, it defines versatile families of targets tailored to Bayesian statistics, from a [single MCMC run with postprocessing](https://docs.ropensci.org/stantargets//articles/mcmc.html) to [large simulation studies](https://docs.ropensci.org/stantargets//articles/mcmc_rep.html).
 <br><br>
 </th>
 </tr>
@@ -49,7 +49,7 @@ knitr::opts_chunk$set(echo = FALSE)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) Like [`stantargets`](https://wlandau.github.io/stantargets), [`jagstargets`](https://wlandau.github.io/jagstargets) is a workflow framework for Bayesian data analysis, with support for both single MCMC runs and large-scale simulation studies. It invokes [JAGS](http://mcmc-jags.sourceforge.net/) through the [`R2jags`](https://github.com/suyusung/R2jags) package, which has nice features such as the ability to parallelize chains across local R processes.
+[![](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) Like [`stantargets`](https://docs.ropensci.org/stantargets/), [`jagstargets`](https://wlandau.github.io/jagstargets) is a workflow framework for Bayesian data analysis, with support for both single MCMC runs and large-scale simulation studies. It invokes [JAGS](http://mcmc-jags.sourceforge.net/) through the [`R2jags`](https://github.com/suyusung/R2jags) package, which has nice features such as the ability to parallelize chains across local R processes.
 <br><br>
 </th>
 </tr>
@@ -60,7 +60,7 @@ knitr::opts_chunk$set(echo = FALSE)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `brmstargets` is an idea first proposed [here](https://github.com/wlandau/stantargets/issues/12#issuecomment-747836678). An implementation is planned, but no work has started. The goal is to accommodate [`brms`](https://github.com/paul-buerkner/brms)-powered Bayesian data analysis workflows just as [`stantargets`](https://wlandau.github.io/stantargets) enhances [`cmdstanr`](https://mc-stan.org/cmdstanr/).
+[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `brmstargets` is an idea first proposed [here](https://github.com/wlandau/stantargets/issues/12#issuecomment-747836678). An implementation is planned, but no work has started. The goal is to accommodate [`brms`](https://github.com/paul-buerkner/brms)-powered Bayesian data analysis workflows just as [`stantargets`](https://docs.ropensci.org/stantargets/) enhances [`cmdstanr`](https://mc-stan.org/cmdstanr/).
 <br><br>
 </th>
 </tr>
@@ -71,7 +71,7 @@ Other ideas
 </th>
 <th style="font-weight:normal;">
 <br>
-Following precedent of [`stantargets`](https://wlandau.github.io/stantargets), it should be possible to extend the R Targetopia to more methodology packages whose users face intense computation, long runtimes, and rapid changes. Possibilities include [`greta`](https://greta-stats.org), [`nimble`](https://r-nimble.org), [`keras`](https://keras.rstudio.com), [`torch`](https://torch.mlverse.org), [`torchvision`](https://github.com/mlverse/torchvision), [`tidymodels`](https://github.com/tidymodels/tidymodels), [`mlr3`](https://mlr3.mlr-org.com/), and [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr).
+Following precedent of [`stantargets`](https://docs.ropensci.org/stantargets/), it should be possible to extend the R Targetopia to more methodology packages whose users face intense computation, long runtimes, and rapid changes. Possibilities include [`greta`](https://greta-stats.org), [`nimble`](https://r-nimble.org), [`keras`](https://keras.rstudio.com), [`torch`](https://torch.mlverse.org), [`torchvision`](https://github.com/mlverse/torchvision), [`tidymodels`](https://github.com/tidymodels/tidymodels), [`mlr3`](https://mlr3.mlr-org.com/), and [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr).
 </ul>
 <br><br>
 </th>
