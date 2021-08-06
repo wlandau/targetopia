@@ -33,7 +33,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th>
-[<img src="https://raw.githubusercontent.com/wlandau/stantargets/main/man/figures/logo.png" height="139px">](https://docs.ropensci.org/stantargets/)
+[<img src="https://raw.githubusercontent.com/ropensci/stantargets/main/man/figures/logo.png" height="139px">](https://docs.ropensci.org/stantargets/)
 </th>
 <th style="font-weight:normal;">
 <br>
@@ -60,7 +60,7 @@ knitr::opts_chunk$set(echo = FALSE)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `brmstargets` is an idea first proposed [here](https://github.com/wlandau/stantargets/issues/12#issuecomment-747836678). An implementation is planned, but no work has started. The goal is to accommodate [`brms`](https://github.com/paul-buerkner/brms)-powered Bayesian data analysis workflows just as [`stantargets`](https://docs.ropensci.org/stantargets/) enhances [`cmdstanr`](https://mc-stan.org/cmdstanr/).
+[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `brmstargets` is an idea first proposed [here](https://github.com/ropensci/stantargets/issues/12#issuecomment-747836678). An implementation is planned, but no work has started. The goal is to accommodate [`brms`](https://github.com/paul-buerkner/brms)-powered Bayesian data analysis workflows just as [`stantargets`](https://docs.ropensci.org/stantargets/) enhances [`cmdstanr`](https://mc-stan.org/cmdstanr/).
 <br><br>
 </th>
 </tr>

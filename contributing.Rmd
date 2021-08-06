@@ -20,7 +20,7 @@ The R Targetopia has the potential to cover multiple fields of Statistics and da
 
 ### Scope
 
-R Targetopia packages are highly specialized, and each is tailored to an existing implementation of the underlying methodology. For example, [`stantargets`](https://docs.ropensci.org/stantargets/) builds on [`cmdstanr`](https://mc-stan.org/cmdstanr/), and the former inherits interface patterns and documentation from the latter. [`brms`](https://paul-buerkner.github.io/brms/) compatibility is out of scope and would need to be implemented in its own R Targetopia package ([discussion here](https://github.com/wlandau/stantargets/issues/12)).
+R Targetopia packages are highly specialized, and each is tailored to an existing implementation of the underlying methodology. For example, [`stantargets`](https://docs.ropensci.org/stantargets/) builds on [`cmdstanr`](https://mc-stan.org/cmdstanr/), and the former inherits interface patterns and documentation from the latter. [`brms`](https://paul-buerkner.github.io/brms/) compatibility is out of scope and would need to be implemented in its own R Targetopia package ([discussion here](https://github.com/ropensci/stantargets/issues/12)).
 
 ## Implementation
 
@@ -165,7 +165,7 @@ Many of the remaining arguments to [`tar_target_raw()`](https://docs.ropensci.or
 
 ### Examples
 
-The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring should run quickly and avoid creating non-temporary files, which is why the examples in [`stantargets`](https://github.com/wlandau/stantargets) are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside [`tar_dir()`](https://docs.ropensci.org/targets/reference/tar_dir.html) to run the code in a temporary directory.
+The `@examples` field of the [`roxygen2`](https://roxygen2.r-lib.org/) docstring should run quickly and avoid creating non-temporary files, which is why the examples in [`stantargets`](https://github.com/ropensci/stantargets) are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside [`tar_dir()`](https://docs.ropensci.org/targets/reference/tar_dir.html) to run the code in a temporary directory.
 
 ### README.Rmd
 

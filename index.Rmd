@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = FALSE)
 [<img src="./images/targetopia/logo.png" height="200px">](https://raw.githubusercontent.com/wlandau/targetopia/main/images/targetopia.png)
 </th>
 <th style="font-weight:normal;">
-The R Targetopia makes it easy to create powerful [Make](https://www.gnu.org/software/make/)-like reproducible analysis pipelines in R, accelerating development and reducing frustration for research papers, simulation studies, and other projects with copious workloads and demanding runtimes. R Targetopia packages are specialized workflow frameworks tailored to individual fields of Statistics and data science, and they use domain knowledge to abstract away most of the tricky planning and engineering typically required to write pipelines. They leverage the full power of [`targets`](https://github.com/wlandau/targets) while requiring minimal expertise with [`targets`](https://github.com/wlandau/targets) itself.
+The R Targetopia makes it easy to create powerful [Make](https://www.gnu.org/software/make/)-like reproducible analysis pipelines in R, accelerating development and reducing frustration for research papers, simulation studies, and other projects with copious workloads and demanding runtimes. R Targetopia packages are specialized workflow frameworks tailored to individual fields of Statistics and data science, and they use domain knowledge to abstract away most of the tricky planning and engineering typically required to write pipelines. They leverage the full power of [`targets`](https://github.com/ropensci/targets) while requiring minimal expertise with [`targets`](https://github.com/ropensci/targets) itself.
 <br><br>
 </th>
 </tr>
