@@ -56,11 +56,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
-`nlmixrtargets`
+[`nlmixrtargets`](https://github.com/nlmixrdevelopment/nlmixrtargets)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) `nlmixrtargets` accommodates [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr)-powered pharmacometrics analysis workflows for reproducibility and minimal rework with changes to data.
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [`nlmixrtargets`](https://github.com/nlmixrdevelopment/nlmixrtargets) accommodates [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr)-powered pharmacometrics analysis workflows for reproducibility and minimal rework with changes to data.
 <br><br>
 </th>
 </tr>
