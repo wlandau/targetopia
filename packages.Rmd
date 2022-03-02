@@ -56,11 +56,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
-[`nlmixrtargets`](https://github.com/nlmixrdevelopment/nlmixrtargets)
+[`nlmixr2targets`](https://github.com/nlmixr2/nlmixr2targets)
 </th>
 <th style="font-weight:normal;">
 <br>
-[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [`nlmixrtargets`](https://github.com/nlmixrdevelopment/nlmixrtargets) accommodates [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr)-powered pharmacometrics analysis workflows for reproducibility and minimal rework with changes to data.
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [`nlmixr2targets`](https://github.com/nlmixr2/nlmixr2targets) accommodates [`nlmixr2`](https://github.com/nlmixr2/nlmixr2)-powered pharmacometrics analysis workflows for reproducibility and minimal rework with changes to data.
 <br><br>
 </th>
 </tr>
@@ -82,7 +82,7 @@ Other ideas
 </th>
 <th style="font-weight:normal;">
 <br>
-Following precedent of [`stantargets`](https://docs.ropensci.org/stantargets/), it should be possible to extend the R Targetopia to more methodology packages whose users face intense computation, long runtimes, and rapid changes. Possibilities include [`greta`](https://greta-stats.org), [`nimble`](https://r-nimble.org), [`keras`](https://keras.rstudio.com), [`torch`](https://torch.mlverse.org), [`torchvision`](https://github.com/mlverse/torchvision), [`tidymodels`](https://github.com/tidymodels/tidymodels), [`mlr3`](https://mlr3.mlr-org.com/), and [`nlmixr`](https://github.com/nlmixrdevelopment/nlmixr). In addition, following [this thread](https://github.com/ropensci/tarchetypes/discussions/46), there may be need for a literate-programming-focused package with target factories outside the scope of `tarchetypes`.
+Following precedent of [`stantargets`](https://docs.ropensci.org/stantargets/), it should be possible to extend the R Targetopia to more methodology packages whose users face intense computation, long runtimes, and rapid changes. Possibilities include [`greta`](https://greta-stats.org), [`nimble`](https://r-nimble.org), [`keras`](https://keras.rstudio.com), [`torch`](https://torch.mlverse.org), [`torchvision`](https://github.com/mlverse/torchvision), [`tidymodels`](https://github.com/tidymodels/tidymodels), [`mlr3`](https://mlr3.mlr-org.com/), and [`nlmixr2`](https://github.com/nlmixr2/nlmixr2). In addition, following [this thread](https://github.com/ropensci/tarchetypes/discussions/46), there may be need for a literate-programming-focused package with target factories outside the scope of `tarchetypes`.
 </ul>
 <br><br>
 </th>
