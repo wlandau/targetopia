@@ -78,6 +78,17 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
+[`geotargets`](https://github.com/njtierney/geotargets)
+</th>
+<th style="font-weight:normal;">
+<br>
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) The `geotargets` package is a `targets` workflow framework for geospatial data, focusing on the integration between `targets` and geospatial storage formats. It currently supports raster and vector formats created by `terra` and is progressively adding support for `sf`, and `stars`. For example, `tar_terra_rast()` allows you to work with `terra` `SpatRaster` objects.
+<br><br>
+</th>
+</tr>
+
+<tr>
+<th style="text-align: center">
 Other ideas
 </th>
 <th style="font-weight:normal;">
