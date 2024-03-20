@@ -23,7 +23,6 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -50,16 +49,17 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  { color: #00769e; background-color: #f1f3f5; }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span { color: #00769e; } /* Normal */
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
-code span.at { color: #20794d; } /* Attribute */
+code span.at { color: #657422; } /* Attribute */
 code span.bn { color: #ad0000; } /* BaseN */
 code span.bu { } /* BuiltIn */
-code span.cf { color: #007ba5; } /* ControlFlow */
+code span.cf { color: #00769e; } /* ControlFlow */
 code span.ch { color: #20794d; } /* Char */
 code span.cn { color: #8f5902; } /* Constant */
 code span.co { color: #5e5e5e; } /* Comment */
@@ -73,17 +73,18 @@ code span.fl { color: #ad0000; } /* Float */
 code span.fu { color: #4758ab; } /* Function */
 code span.im { } /* Import */
 code span.in { color: #5e5e5e; } /* Information */
-code span.kw { color: #007ba5; } /* Keyword */
+code span.kw { color: #00769e; } /* Keyword */
 code span.op { color: #5e5e5e; } /* Operator */
-code span.ot { color: #007ba5; } /* Other */
+code span.ot { color: #00769e; } /* Other */
 code span.pp { color: #ad0000; } /* Preprocessor */
-code span.sc { color: #20794d; } /* SpecialChar */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
 code span.ss { color: #20794d; } /* SpecialString */
 code span.st { color: #20794d; } /* String */
 code span.va { color: #111111; } /* Variable */
 code span.vs { color: #20794d; } /* VerbatimString */
 code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
+
 
   <!--radix_placeholder_meta_tags-->
   <title>R Targetopia: Contributing</title>
@@ -456,8 +457,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -786,6 +787,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -826,9 +828,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -923,6 +937,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1027,10 +1046,6 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
-  }
-
-  .figure img {
-    width: 100%;
   }
 
   .figure .caption {
@@ -1688,6 +1703,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1765,8 +1786,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1792,12 +1814,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1862,7 +1885,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
+          $(this).html(fn.shadowRoot.querySelector("sup"))
+          $(this).id = fn.id
+          fn.remove()
+        }
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
+        }).join("\n");
         window.tippy(this, {
           allowHTML: true,
           content: refHtml,
@@ -1873,6 +1911,31 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           placement: 'bottom-start'
         });
       });
+
+      // fix footnotes in tables (#411)
+      // replacing broken distill.pub feature
+      $('table d-footnote').each(function() {
+        // we replace internal showAtNode methode which is triggered when hovering a footnote
+        this.hoverBox.showAtNode = function(node) {
+          // ported from https://github.com/distillpub/template/pull/105/files
+          calcOffset = function(elem) {
+              let x = elem.offsetLeft;
+              let y = elem.offsetTop;
+              // Traverse upwards until an `absolute` element is found or `elem`
+              // becomes null.
+              while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                  x += elem.offsetLeft;
+                  y += elem.offsetTop;
+              }
+
+              return { left: x, top: y };
+          }
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+          const bbox = node.getBoundingClientRect();
+          const offset = calcOffset(node);
+          this.show([offset.left + bbox.width, offset.top + bbox.height]);
+        }
+      })
 
       // clear polling timer
       clearInterval(tid);
@@ -1972,6 +2035,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
+      // ignore leaflet img layers (#106)
+      figures = figures.filter(':not(img[class*="leaflet"])')
       if ($(this).attr('data-layout') !== "l-body") {
         figures.css('width', '100%');
       } else {
@@ -1994,7 +2059,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
-        $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
+        $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
       });
     }
 
@@ -2033,7 +2098,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2085,6 +2150,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-title">
 <h1>Contributing</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>How to create an R Targetopia package</p>
@@ -2107,46 +2173,43 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>R Targetopia packages leverage target factories to make pipeline construction easier. A target factory is a function that accepts simple inputs, calls <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>, and produces a list of target objects. Sketch:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R/factory.R</span>
-<span class='co'>#' @title Example target factory.</span>
-<span class='co'>#' @description Define 3 targets:</span>
-<span class='co'>#' 1. Track the user-supplied data file.</span>
-<span class='co'>#' 2. Read the data using `read_data()` (defined elsewhere).</span>
-<span class='co'>#' 3. Fit a model to the data using `fit_model()` (defined elsewhere).</span>
-<span class='co'>#' @return A list of target objects.</span>
-<span class='co'>#' @export</span>
-<span class='co'>#' @param file Character, data file path.</span>
-<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"file"</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
-    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"data"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
-    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"model"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>}</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># R/factory.R</span></span>
+<span><span class='co'>#' @title Example target factory.</span></span>
+<span><span class='co'>#' @description Define 3 targets:</span></span>
+<span><span class='co'>#' 1. Track the user-supplied data file.</span></span>
+<span><span class='co'>#' 2. Read the data using `read_data()` (defined elsewhere).</span></span>
+<span><span class='co'>#' 3. Fit a model to the data using `fit_model()` (defined elsewhere).</span></span>
+<span><span class='co'>#' @return A list of target objects.</span></span>
+<span><span class='co'>#' @export</span></span>
+<span><span class='co'>#' @param file Character, data file path.</span></span>
+<span><span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span></span>
+<span>    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"file"</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"data"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='st'>"model"</span>, <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
 <p>In <code>_targets.R</code>, the user writes one call to the factory instead of multiple calls to <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> This shorthand makes user-side code simpler and more concise, and it abstracts away low-level configuration settings like <code>format = "file"</code> and <code>deployment = "main"</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># _targets.R</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://docs.ropensci.org/targets/'>targets</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>yourExamplePackage</span><span class='op'>)</span>
-<span class='fu'>target_factory</span><span class='op'>(</span><span class='st'>"data.csv"</span><span class='op'>)</span> <span class='co'># End with a list of targets.</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># _targets.R</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://docs.ropensci.org/targets/'>targets</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>yourExamplePackage</span><span class='op'>)</span></span>
+<span><span class='fu'>target_factory</span><span class='op'>(</span><span class='st'>"data.csv"</span><span class='op'>)</span> <span class='co'># End with a list of targets.</span></span></code></pre>
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R console</span>
-<span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
-<span class='co'>#&gt; # A tibble: 3 x 2</span>
-<span class='co'>#&gt;   name  command          </span>
-<span class='co'>#&gt;   &lt;chr&gt; &lt;chr&gt;            </span>
-<span class='co'>#&gt; 1 file  "\"data.csv\""   </span>
-<span class='co'>#&gt; 2 data  "read_data(file)"           </span>
-<span class='co'>#&gt; 3 model "run_model(data)"</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># R console</span></span>
+<span><span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span></span>
+<span><span class='co'>#&gt; # A tibble: 3 x 2</span></span>
+<span><span class='co'>#&gt;   name  command          </span></span>
+<span><span class='co'>#&gt;   &lt;chr&gt; &lt;chr&gt;            </span></span>
+<span><span class='co'>#&gt; 1 file  "\"data.csv\""   </span></span>
+<span><span class='co'>#&gt; 2 data  "read_data(file)"           </span></span>
+<span><span class='co'>#&gt; 3 model "run_model(data)"</span></span></code></pre>
 </div>
 </div>
 <h3 id="metaprogramming">Metaprogramming</h3>
@@ -2154,82 +2217,75 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>The <code>quote()</code> function captures arbitrary expressions.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>f(x + y)</code></pre>
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code> language f(x + y)</code></pre>
 </div>
 <p>The <code>deparse()</code> function turns expressions into characters.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] &quot;f(x + y)&quot;</code></pre>
 </div>
 <p>The <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#substitute"><code>substitute()</code></a> function quotes code, creates expressions, and inserts arbitrary values into symbols.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='va'>arg</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>arg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='va'>arg</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>arg <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>f(arg = x + y)</code></pre>
 </div>
 <p>If you call <code>substitute()</code> from inside a function (or other non-global environment) then <code>env</code> defaults to the calling environment.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>arg</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='va'>arg</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>arg</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='va'>arg</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='fu'>f</span><span class='op'>(</span>arg <span class='op'>=</span> <span class='fu'>f</span><span class='op'>(</span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>f(arg = f(x + y))</code></pre>
 </div>
 <p>Together, <code>quote()</code>, <code>deparse()</code>, and <code>substitute()</code> help you create factories that accept friendly user inputs and supply safe arguments to <a href="https://docs.ropensci.org/targets/reference/tar_target_raw.html"><code>tar_target_raw()</code></a>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R/factory.R</span>
-<span class='co'>#' @title Example target factory.</span>
-<span class='co'>#' @description Define 3 targets:</span>
-<span class='co'>#' 1. Track the user-supplied data file.</span>
-<span class='co'>#' 2. Read the data using `read_data()` (defined elsewhere).</span>
-<span class='co'>#' 3. Fit a model to the data using `fit_model()` (defined elsewhere).</span>
-<span class='co'>#' @return A list of target objects.</span>
-<span class='co'>#' @export</span>
-<span class='co'>#' @param name Symbol, name for the collection of targets.</span>
-<span class='co'>#' @param file Character, data file path.</span>
-<span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>file</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='va'>name_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>name</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='va'>name_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='st'>"_file"</span><span class='op'>)</span>
-  <span class='va'>name_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='st'>"_data"</span><span class='op'>)</span>
-  <span class='va'>sym_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_file</span><span class='op'>)</span>
-  <span class='va'>sym_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_data</span><span class='op'>)</span>
-  <span class='va'>command_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='va'>command_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sym_data</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
-    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,
-    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>}</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># R/factory.R</span></span>
+<span><span class='co'>#' @title Example target factory.</span></span>
+<span><span class='co'>#' @description Define 3 targets:</span></span>
+<span><span class='co'>#' 1. Track the user-supplied data file.</span></span>
+<span><span class='co'>#' 2. Read the data using `read_data()` (defined elsewhere).</span></span>
+<span><span class='co'>#' 3. Fit a model to the data using `fit_model()` (defined elsewhere).</span></span>
+<span><span class='co'>#' @return A list of target objects.</span></span>
+<span><span class='co'>#' @export</span></span>
+<span><span class='co'>#' @param name Symbol, name for the collection of targets.</span></span>
+<span><span class='co'>#' @param file Character, data file path.</span></span>
+<span><span class='va'>target_factory</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>file</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span>  <span class='va'>name_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>name</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  <span class='va'>name_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='st'>"_file"</span><span class='op'>)</span></span>
+<span>  <span class='va'>name_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='st'>"_data"</span><span class='op'>)</span></span>
+<span>  <span class='va'>sym_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_file</span><span class='op'>)</span></span>
+<span>  <span class='va'>sym_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/name.html'>as.symbol</a></span><span class='op'>(</span><span class='va'>name_data</span><span class='op'>)</span></span>
+<span>  <span class='va'>command_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  <span class='va'>command_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sym_data</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span></span>
+<span>    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span></span>
+<span>  <span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># R console</span>
-<span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span>
-<span class='co'>#&gt; # A tibble: 3 x 2</span>
-<span class='co'>#&gt;   name        command                  </span>
-<span class='co'>#&gt;   &lt;chr&gt;       &lt;chr&gt;                    </span>
-<span class='co'>#&gt; 1 custom_file "\"data.csv\""           </span>
-<span class='co'>#&gt; 2 custom_data "read_data(custom_file)"</span>
-<span class='co'>#&gt; 3 custom      "run_model(custom_data)"</span>
-</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># R console</span></span>
+<span><span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span></span>
+<span><span class='co'>#&gt; # A tibble: 3 x 2</span></span>
+<span><span class='co'>#&gt;   name        command                  </span></span>
+<span><span class='co'>#&gt;   &lt;chr&gt;       &lt;chr&gt;                    </span></span>
+<span><span class='co'>#&gt; 1 custom_file "\"data.csv\""           </span></span>
+<span><span class='co'>#&gt; 2 custom_data "read_data(custom_file)"</span></span>
+<span><span class='co'>#&gt; 3 custom      "run_model(custom_data)"</span></span></code></pre>
 </div>
 </div>
 <h3 id="settings">Settings</h3>
@@ -2252,7 +2308,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>The <code>@examples</code> field of the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> docstring should run quickly and avoid creating non-temporary files, which is why the examples in <a href="https://github.com/ropensci/stantargets"><code>stantargets</code></a> are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside <a href="https://docs.ropensci.org/targets/reference/tar_dir.html"><code>tar_dir()</code></a> to run the code in a temporary directory.</p>
 <h3 id="readme.rmd">README.Rmd</h3>
 <p>Feel free to include a README badge to let others know your package is part of the R Targetopia.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray)</span><span class="co">](https://wlandau.github.io/targetopia/)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co">[</span><span class="al">![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray)</span><span class="co">](https://wlandau.github.io/targetopia/)</span></span></code></pre></div>
 <p><a href="https://wlandau.github.io/targetopia/"><img src="https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray" alt="R Targetopia" /></a></p>
 <h2 id="testing">Testing</h2>
 <h3 id="what-to-test">What to test</h3>
@@ -2281,7 +2337,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>Users can still write their own downstream <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a> calls in the pipeline for custom postprocessing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
