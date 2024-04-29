@@ -89,6 +89,17 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
+[`sqltargets`](https://github.com/daranzolin/sqltargets)
+</th>
+<th style="font-weight:normal;">
+<br>
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) `sqltargets` makes it easy to integrate SQL files within your `targets` workflows. The shorthand `tar_sql()` creates two targets: (1) the 'upstream' SQL file; and (2) the 'downstream' result of the query. Dependencies can be specified by calling `tar_load()` within SQL comments. Parameters can be specified using `glue::glue_sql()` bracket notation ('{}').   
+<br><br>
+</th>
+</tr>
+
+<tr>
+<th style="text-align: center">
 Other ideas
 </th>
 <th style="font-weight:normal;">
