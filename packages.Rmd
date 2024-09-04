@@ -77,8 +77,8 @@ knitr::opts_chunk$set(echo = FALSE)
 </tr>
 
 <tr>
-<th style="text-align: center">
-[`geotargets`](https://github.com/njtierney/geotargets)
+<th>
+[<img src="https://raw.githubusercontent.com/njtierney/geotargets/master/man/figures/logo.png" height="139px">](https://njtierney.github.io/geotargets/)
 </th>
 <th style="font-weight:normal;">
 <br>
