@@ -21,8 +21,9 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -2098,7 +2099,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2308,7 +2309,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <p>The <code>@examples</code> field of the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> docstring should run quickly and avoid creating non-temporary files, which is why the examples in <a href="https://github.com/ropensci/stantargets"><code>stantargets</code></a> are mostly just sketches of pipelines. If you want to actually run a pipeline in an example, consider enclosing it inside <a href="https://docs.ropensci.org/targets/reference/tar_dir.html"><code>tar_dir()</code></a> to run the code in a temporary directory.</p>
 <h3 id="readme.rmd">README.Rmd</h3>
 <p>Feel free to include a README badge to let others know your package is part of the R Targetopia.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co">[</span><span class="al">![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray)</span><span class="co">](https://wlandau.github.io/targetopia/)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![R Targetopia](https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray)</span><span class="co">](https://wlandau.github.io/targetopia/)</span></span></code></pre></div>
 <p><a href="https://wlandau.github.io/targetopia/"><img src="https://img.shields.io/badge/R_Targetopia-member-blue?style=flat&amp;labelColor=gray" alt="R Targetopia" /></a></p>
 <h2 id="testing">Testing</h2>
 <h3 id="what-to-test">What to test</h3>
@@ -2337,11 +2338,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
-<section class="footnotes" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Users can still write their own downstream <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a> calls in the pipeline for custom postprocessing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>For more information about metaprogramming in base R, see the <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">“Computing on the Language” chapter of the Advanced R book</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Users can still write their own downstream <a href="https://docs.ropensci.org/targets/reference/tar_target.html"><code>tar_target()</code></a> calls in the pipeline for custom postprocessing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>For more information about metaprogramming in base R, see the <a href="http://adv-r.had.co.nz/Computing-on-the-language.html#capturing-expressions">“Computing on the Language” chapter of the Advanced R book</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 <!--radix_placeholder_article_footer-->

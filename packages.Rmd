@@ -55,28 +55,6 @@ knitr::opts_chunk$set(echo = FALSE)
 </tr>
 
 <tr>
-<th style="text-align: center">
-[`nlmixr2targets`](https://github.com/nlmixr2/nlmixr2targets)
-</th>
-<th style="font-weight:normal;">
-<br>
-[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [`nlmixr2targets`](https://github.com/nlmixr2/nlmixr2targets) accommodates [`nlmixr2`](https://github.com/nlmixr2/nlmixr2)-powered pharmacometrics analysis workflows for reproducibility and minimal rework with changes to data.
-<br><br>
-</th>
-</tr>
-
-<tr>
-<th style="text-align: center">
-`brmstargets`
-</th>
-<th style="font-weight:normal;">
-<br>
-[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `brmstargets` is an idea first proposed [here](https://github.com/ropensci/stantargets/issues/12#issuecomment-747836678). An implementation is planned, but no work has started. The goal is to accommodate [`brms`](https://github.com/paul-buerkner/brms)-powered Bayesian data analysis workflows just as [`stantargets`](https://docs.ropensci.org/stantargets/) enhances [`cmdstanr`](https://mc-stan.org/cmdstanr/).
-<br><br>
-</th>
-</tr>
-
-<tr>
 <th>
 [<img src="https://raw.githubusercontent.com/njtierney/geotargets/master/man/figures/logo.png" height="139px">](https://njtierney.github.io/geotargets/)
 </th>
@@ -89,11 +67,33 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <tr>
 <th style="text-align: center">
+[`nlmixr2targets`](https://github.com/nlmixr2/nlmixr2targets)
+</th>
+<th style="font-weight:normal;">
+<br>
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [`nlmixr2targets`](https://github.com/nlmixr2/nlmixr2targets) accommodates [`nlmixr2`](https://github.com/nlmixr2/nlmixr2)-powered pharmacometrics analysis workflows for reproducibility and minimal rework with changes to data.
+<br><br>
+</th>
+</tr>
+
+<tr>
+<th style="text-align: center">
 [`sqltargets`](https://github.com/daranzolin/sqltargets)
 </th>
 <th style="font-weight:normal;">
 <br>
 [![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) `sqltargets` makes it easy to integrate SQL files within your `targets` workflows. The shorthand `tar_sql()` creates two targets: (1) the 'upstream' SQL file; and (2) the 'downstream' result of the query. Dependencies can be specified by calling `tar_load()` within SQL comments. Parameters can be specified using `glue::glue_sql()` bracket notation ('{}').   
+<br><br>
+</th>
+</tr>
+
+<tr>
+<th style="text-align: center">
+`brmstargets`
+</th>
+<th style="font-weight:normal;">
+<br>
+[![](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept) `brmstargets` is an idea first proposed [here](https://github.com/ropensci/stantargets/issues/12#issuecomment-747836678). An implementation is planned, but no work has started. The goal is to accommodate [`brms`](https://github.com/paul-buerkner/brms)-powered Bayesian data analysis workflows just as [`stantargets`](https://docs.ropensci.org/stantargets/) enhances [`cmdstanr`](https://mc-stan.org/cmdstanr/).
 <br><br>
 </th>
 </tr>
