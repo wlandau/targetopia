@@ -88,6 +88,17 @@ knitr::opts_chunk$set(echo = FALSE)
 </tr>
 
 <tr>
+<th>
+[<img src="https://raw.githubusercontent.com/overdodactyl/redcaptargets/main/man/figures/logo.png" height="139px">](https://overdodactyl.github.io/redcaptargets)
+</th>
+<th style="font-weight:normal;">
+<br>
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[`redcaptargets`](https://overdodactyl.github.io/redcaptargets) is a [`targets`](https://docs.ropensci.org/targets) workflow framework for integrating data from [REDCap](https://project-redcap.org/) databases. [`tar_redcap()`](https://overdodactyl.github.io/redcaptargets/reference/tar_redcap.html) dynamically creates targets for each REDCap instrument, as well as metadata and other supplemental information. Flexible cue strategies support efficient updates, including the use of REDCap project logs to detect changes and avoid unnecessary data pulls.<br><br>
+</th>
+</tr>
+
+<tr>
 <th style="text-align: center">
 `brmstargets`
 </th>
