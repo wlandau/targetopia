@@ -24,7 +24,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Render site.
-        run: quarto render
+        run: rmarkdown::render_site()
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages.
