@@ -20,8 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -2099,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2204,7 +2205,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># R console</span></span>
-<span><span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span></span>
+<span><span class='fu'>tar_manifest</span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span></span>
 <span><span class='co'>#&gt; # A tibble: 3 x 2</span></span>
 <span><span class='co'>#&gt;   name  command          </span></span>
 <span><span class='co'>#&gt;   &lt;chr&gt; &lt;chr&gt;            </span></span>
@@ -2270,9 +2271,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <span>  <span class='va'>command_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>read_data</span><span class='op'>(</span><span class='va'>file</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='va'>sym_file</span><span class='op'>)</span><span class='op'>)</span></span>
 <span>  <span class='va'>command_model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='fu'>run_model</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>, env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>sym_data</span><span class='op'>)</span><span class='op'>)</span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span></span>
-<span>    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
-<span>    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
-<span>    <span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_target_raw.html'>tar_target_raw</a></span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span></span>
+<span>    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='va'>name_file</span>, <span class='va'>file</span>, format <span class='op'>=</span> <span class='st'>"file"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='va'>name_data</span>, <span class='va'>command_data</span>, format <span class='op'>=</span> <span class='st'>"fst_tbl"</span>, deployment <span class='op'>=</span> <span class='st'>"main"</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'>tar_target_raw</span><span class='op'>(</span><span class='va'>name_model</span>, <span class='va'>command_model</span>, format <span class='op'>=</span> <span class='st'>"qs"</span><span class='op'>)</span></span>
 <span>  <span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
 </div>
@@ -2280,7 +2281,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># R console</span></span>
-<span><span class='fu'><a href='https://docs.ropensci.org/targets/reference/tar_manifest.html'>tar_manifest</a></span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span></span>
+<span><span class='fu'>tar_manifest</span><span class='op'>(</span>fields <span class='op'>=</span> <span class='va'>command</span><span class='op'>)</span></span>
 <span><span class='co'>#&gt; # A tibble: 3 x 2</span></span>
 <span><span class='co'>#&gt;   name        command                  </span></span>
 <span><span class='co'>#&gt;   &lt;chr&gt;       &lt;chr&gt;                    </span></span>
